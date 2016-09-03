@@ -35,8 +35,6 @@ public class JBossControllerAddress {
 
     public static JBossControllerAddress parseAddress(String s) throws JBossCliException {
 
-
-
         int i = s.indexOf(":");
 
         if (i == -1) {
@@ -59,13 +57,12 @@ public class JBossControllerAddress {
             try {
 
                 port = Integer.parseInt(sp);
+                return new JBossControllerAddress(host, port);
             }
             catch (Exception e) {
 
-                throw new JBossCliException("invalid port value \"" + sp + "\"");
+                throw new JBossCliException("invalid port value \"" + sp + "\"", e);
             }
-
-            return new JBossControllerAddress(host, port);
         }
     }
 

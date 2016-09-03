@@ -38,6 +38,11 @@ public class JBossCliException extends Exception {
         super(cause);
     }
 
+    public JBossCliException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
