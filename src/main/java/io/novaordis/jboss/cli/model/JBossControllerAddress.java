@@ -109,7 +109,14 @@ public class JBossControllerAddress {
             }
         }
 
-        return new JBossControllerAddress(username, password, host, port);
+        try {
+
+            return new JBossControllerAddress(username, password, host, port);
+        }
+        catch(IllegalArgumentException e) {
+
+            throw new JBossCliException(e.getMessage(), e);
+        }
     }
 
     // Attributes ------------------------------------------------------------------------------------------------------

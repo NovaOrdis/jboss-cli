@@ -331,9 +331,10 @@ public class JBossControllerAddressTest {
     }
 
     @Test
-    public void parseAddress_InvalidPort() throws Exception {
+    public void parseAddress_PortNotAnInteger() throws Exception {
 
         try {
+
             JBossControllerAddress.parseAddress("something:blah");
             fail("should have thrown exception");
         }
@@ -342,6 +343,22 @@ public class JBossControllerAddressTest {
             String msg = e.getMessage();
             log.info(msg);
             assertEquals("invalid port value \"blah\"" , msg);
+        }
+    }
+
+    @Test
+    public void parseAddress_InvalidPort() throws Exception {
+
+        try {
+
+            JBossControllerAddress.parseAddress("something:70000");
+            fail("should have thrown exception");
+        }
+        catch(JBossCliException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("invalid port value 70000" , msg);
         }
     }
 
