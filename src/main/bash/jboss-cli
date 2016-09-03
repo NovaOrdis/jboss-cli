@@ -9,7 +9,7 @@
 [ -f $(dirname $0)/jboss-cli.shlib ] && . $(dirname $0)/jboss-cli.shlib || { echo "required library $(dirname $0)/jboss-cli.shlib not found" 1>&2; exit 1; }
 
 reldir=$(dirname $0)
-main_class=io.novaordis.jboss.cli.Main
+main_class=${main_class}
 verbose=false
 jboss_home=/Users/ovidiu/runtime/jboss-eap-6.4.6
 
@@ -91,7 +91,7 @@ classpath=$(get_classpath) || fail "failed to build classpath"
 java_bin="java"
 [ "${java_home}" != "" ] && java_bin="${java_home}/bin/java"
 
-command="${java_bin} -cp ${classpath} ${debug_args} ${main_class} ${args}"
+command="${java_bin} -cp ${classpath} ${debug_args} io.novaordis.jboss.cli.Main ${args}"
 
 ${verbose} && echo ${command}
 
