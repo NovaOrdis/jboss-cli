@@ -16,6 +16,7 @@
 
 package io.novaordis.jboss.cli;
 
+import io.novaordis.jboss.cli.model.JBossControllerAddress;
 import org.jboss.as.cli.CommandContext;
 import org.jboss.as.cli.CommandContextFactory;
 import org.jboss.as.cli.Util;
@@ -42,10 +43,7 @@ public class JBossControllerClientImpl implements JBossControllerClient {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String host;
-    private int port;
-    private String username;
-    private char[] password;
+    private JBossControllerAddress controllerAddress;
     private boolean disableLocalAuthentication;
     private boolean initializeConsole;
     private int connectionTimeout;
@@ -58,10 +56,7 @@ public class JBossControllerClientImpl implements JBossControllerClient {
 
     public JBossControllerClientImpl() {
 
-        this.host = JBossControllerClient.DEFAULT_HOST;
-        this.port = JBossControllerClient.DEFAULT_PORT;
-        this.username = null;
-        this.password = null;
+        this.controllerAddress = new JBossControllerAddress();
 
         this.disableLocalAuthentication = false;
         this.initializeConsole = false;
@@ -71,53 +66,58 @@ public class JBossControllerClientImpl implements JBossControllerClient {
 
     // JBossControllerClient implementation ----------------------------------------------------------------------------
 
+    /**
+     * @see JBossControllerAddress#setHost(String)
+     */
     @Override
     public void setHost(String host) {
 
-        this.host = host;
+        this.controllerAddress.setHost(host);
     }
 
     @Override
     public String getHost() {
 
-        return host;
+        return controllerAddress.getHost();
     }
 
+    /**
+     * @see JBossControllerAddress#setPort(int)
+     */
     @Override
-    public void setPort(int port) {
+    public void setPort(int i) {
 
-        this.port = port;
+        this.controllerAddress.setPort(i);
     }
 
     @Override
     public int getPort() {
 
-        return port;
+        return controllerAddress.getPort();
     }
 
     @Override
     public void setUsername(String username) {
 
-        this.username = username;
+        this.controllerAddress.setUsername(username);
     }
 
     @Override
     public String getUsername() {
 
-        return username;
+        return controllerAddress.getUsername();
     }
 
     @Override
-    public void setPassword(char[] password) {
+    public void setPassword(char[] c) {
 
-        this.password = new char[password.length];
-        System.arraycopy(password, 0, this.password, 0, password.length);
+        this.controllerAddress.setPassword(c);
     }
 
     @Override
     public char[] getPassword() {
 
-        return password;
+        return controllerAddress.getPassword();
     }
 
     @Override
@@ -132,7 +132,13 @@ public class JBossControllerClientImpl implements JBossControllerClient {
 
             CommandContextFactory factory = CommandContextFactory.getInstance();
             commandContext = factory.newCommandContext(
-                    host, port, username, password, disableLocalAuthentication, initializeConsole, connectionTimeout);
+                    controllerAddress.getHost(),
+                    controllerAddress.getPort(),
+                    controllerAddress.getUsername(),
+                    controllerAddress.getPassword(),
+                    disableLocalAuthentication,
+                    initializeConsole,
+                    connectionTimeout);
             commandContext.connectController();
             connected = true;
         }
