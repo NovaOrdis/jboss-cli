@@ -33,37 +33,83 @@ public class JBossControllerAddress {
 
     // Static ----------------------------------------------------------------------------------------------------------
 
+    /**
+     * Parses the following format [[username:password]@]host[:port].
+     */
     public static JBossControllerAddress parseAddress(String s) throws JBossCliException {
 
-        int i = s.indexOf(":");
+        int i = s.indexOf('@');
+
+        String username = null;
+        char[] password = null;
+        String host;
+        int port;
+
+        String hostAndPort;
 
         if (i == -1) {
 
-            return new JBossControllerAddress(s, JBossControllerClient.DEFAULT_PORT);
+            //
+            // no username:password present
+            //
+
+            hostAndPort = s;
         }
         else {
 
-            String host = s.substring(0, i);
+            //
+            // username:password present
+            //
 
-            if (i == s.length() - 1) {
+            hostAndPort = s.substring(i + 1);
+
+            String usernameAndPassword = s.substring(0, i);
+
+            int j = usernameAndPassword.indexOf(':');
+
+            if (j == -1) {
+
+                throw new JBossCliException("no password specified");
+            }
+
+            username = usernameAndPassword.substring(0, j);
+            usernameAndPassword = usernameAndPassword.substring(j + 1);
+            password = usernameAndPassword.toCharArray();
+
+            if (password.length == 0) {
+                throw new JBossCliException("empty password");
+            }
+        }
+
+        i = hostAndPort.lastIndexOf(":");
+
+        if (i == -1) {
+
+            host = hostAndPort;
+            port = JBossControllerClient.DEFAULT_PORT;
+        }
+        else {
+
+            host = hostAndPort.substring(0, i);
+
+            if (i == hostAndPort.length() - 1) {
 
                 throw new JBossCliException("missing port information");
             }
 
-            String sp = s.substring(i + 1);
-
-            int port;
+            String sp = hostAndPort.substring(i + 1);
 
             try {
 
                 port = Integer.parseInt(sp);
-                return new JBossControllerAddress(host, port);
             }
             catch (Exception e) {
 
                 throw new JBossCliException("invalid port value \"" + sp + "\"", e);
             }
         }
+
+        return new JBossControllerAddress(username, password, host, port);
     }
 
     // Attributes ------------------------------------------------------------------------------------------------------
@@ -88,7 +134,7 @@ public class JBossControllerAddress {
      */
     public JBossControllerAddress(String host) {
 
-        this(host, JBossControllerClient.DEFAULT_PORT, null);
+        this(null, null, host, JBossControllerClient.DEFAULT_PORT);
     }
 
     /**
@@ -96,17 +142,18 @@ public class JBossControllerAddress {
      */
     public JBossControllerAddress(String host, int port) {
 
-        this(host, port, null);
+        this(null, null, host, port);
     }
 
     /**
      * @exception IllegalArgumentException on null host or invalid port values.
      */
-    public JBossControllerAddress(String host, int port, String username) {
+    public JBossControllerAddress(String username, char[] password, String host, int port) {
 
         setHost(host);
         setPort(port);
         setUsername(username);
+        setPassword(password);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -156,10 +203,24 @@ public class JBossControllerAddress {
         return password;
     }
 
+    /**
+     * @exception IllegalArgumentException if null password when the username is not null
+     */
     public void setPassword(char[] chars) {
 
-        this.password = new char[chars.length];
-        System.arraycopy(chars, 0, password, 0, chars.length);
+        if (chars == null) {
+
+            if (username != null) {
+                throw new IllegalArgumentException("null password");
+            }
+
+            this.password = null;
+        }
+        else {
+
+            this.password = new char[chars.length];
+            System.arraycopy(chars, 0, password, 0, chars.length);
+        }
     }
 
     @Override
@@ -191,7 +252,7 @@ public class JBossControllerAddress {
     @Override
     public String toString() {
 
-        return (username == null ? "" : username + "@") + host + ":" + port;
+        return (username == null ? "" : username + ":***@") + host + ":" + port;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

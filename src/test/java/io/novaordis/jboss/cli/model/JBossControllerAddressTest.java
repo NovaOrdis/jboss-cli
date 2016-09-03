@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
@@ -182,16 +183,36 @@ public class JBossControllerAddressTest {
     }
 
     @Test
+    public void constructor3() throws Exception {
+
+        char[] password = new char[] { 'a', 'b', 'c' };
+
+        JBossControllerAddress a = new JBossControllerAddress("someuser", password, "something", 1);
+
+        assertEquals("something", a.getHost());
+        assertEquals(1, a.getPort());
+        assertEquals("someuser", a.getUsername());
+        char[] password2 = a.getPassword();
+        assertEquals(3, password2.length);
+        assertEquals('a', password2[0]);
+        assertEquals('b', password2[1]);
+        assertEquals('c', password2[2]);
+        assertEquals("someuser:***@something:1", a.toString());
+    }
+
+    @Test
     public void constructor_nullHost() throws Exception {
 
         try {
-            new JBossControllerAddress(null, 10, "somebody");
+
+            new JBossControllerAddress("somebody", new char[] {'a'}, null, 10);
             fail("should have thrown Exception");
         }
         catch(IllegalArgumentException e) {
 
             String msg = e.getMessage();
             log.info(msg);
+            assertTrue(msg.contains("null host"));
         }
     }
 
@@ -199,14 +220,40 @@ public class JBossControllerAddressTest {
     public void constructor_invalidPort() throws Exception {
 
         try {
-            new JBossControllerAddress("something", -1, "somebody");
+
+            new JBossControllerAddress("somebody", new char[] {'a'}, "something", -1);
             fail("should have thrown Exception");
         }
         catch(IllegalArgumentException e) {
 
             String msg = e.getMessage();
             log.info(msg);
+            assertTrue(msg.contains("invalid port"));
         }
+    }
+
+    @Test
+    public void constructor_IfUsernamePresentPasswordCantBeNull() throws Exception {
+
+        try {
+
+            new JBossControllerAddress("somebody", null, "something", 1);
+            fail("should have thrown Exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.contains("null password"));
+        }
+    }
+
+    @Test
+    public void constructor_IfUsernameNotPresentPasswordCanBeNotNull() throws Exception {
+
+        JBossControllerAddress a = new JBossControllerAddress(null, new char[] { 'a' } , "something", 1);
+
+        assertNull(a.getUsername());
     }
 
     // equals() --------------------------------------------------------------------------------------------------------
@@ -224,8 +271,11 @@ public class JBossControllerAddressTest {
     @Test
     public void equals() throws Exception {
 
-        JBossControllerAddress a = new JBossControllerAddress("host1", 10, "user1");
-        JBossControllerAddress a2 = new JBossControllerAddress("host1", 10, "user1");
+        //
+        // we're equal even if the passwords are different
+        //
+        JBossControllerAddress a = new JBossControllerAddress("user1", new char[] { 'a' }, "host1", 10);
+        JBossControllerAddress a2 = new JBossControllerAddress("user1", new char[] { 'b' }, "host1", 10);
 
         assertEquals(a, a2);
         assertEquals(a2, a);
@@ -234,8 +284,8 @@ public class JBossControllerAddressTest {
     @Test
     public void notEquals() throws Exception {
 
-        JBossControllerAddress a = new JBossControllerAddress("host1", 10, null);
-        JBossControllerAddress a2 = new JBossControllerAddress("host1", 10, "user1");
+        JBossControllerAddress a = new JBossControllerAddress(null, null, "host1", 10);
+        JBossControllerAddress a2 = new JBossControllerAddress("user1", new char[] { 'a' }, "host1", 10);
 
         assertFalse(a.equals(a2));
         assertFalse(a2.equals(a));
@@ -244,8 +294,8 @@ public class JBossControllerAddressTest {
     @Test
     public void notEquals2() throws Exception {
 
-        JBossControllerAddress a = new JBossControllerAddress("host1", 10, "user1");
-        JBossControllerAddress a2 = new JBossControllerAddress("host2", 10, "user1");
+        JBossControllerAddress a = new JBossControllerAddress("user1", new char[] { 'a' }, "host1", 10);
+        JBossControllerAddress a2 = new JBossControllerAddress("user1", new char[] { 'a' }, "host2", 10);
 
         assertFalse(a.equals(a2));
         assertFalse(a2.equals(a));
@@ -305,6 +355,54 @@ public class JBossControllerAddressTest {
         assertNull(a.getUsername());
         assertNull(a.getPassword());
         assertEquals("something:5", a.toString());
+    }
+
+    @Test
+    public void parseAddress_Username_NoPassword() throws Exception {
+
+        try {
+
+            JBossControllerAddress.parseAddress("some-user@some-host:1000");
+            fail("should have failed exception");
+        }
+        catch(JBossCliException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.contains("no password specified"));
+        }
+    }
+
+    @Test
+    public void parseAddress_Username_EmptyPassword() throws Exception {
+
+        try {
+
+            JBossControllerAddress.parseAddress("some-user:@some-host:1000");
+            fail("should have failed exception");
+        }
+        catch(JBossCliException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.contains("empty password"));
+        }
+    }
+
+    @Test
+    public void parseAddress_UsernameAndPassword() throws Exception {
+
+        JBossControllerAddress a = JBossControllerAddress.parseAddress("some-user:abc@some-host:1000");
+
+        assertEquals("some-host", a.getHost());
+        assertEquals(1000, a.getPort());
+        assertEquals("some-user", a.getUsername());
+        char[] password = a.getPassword();
+        assertEquals(3, password.length);
+        assertEquals('a', password[0]);
+        assertEquals('b', password[1]);
+        assertEquals('c', password[2]);
+        assertEquals("some-user:***@some-host:1000", a.toString());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
