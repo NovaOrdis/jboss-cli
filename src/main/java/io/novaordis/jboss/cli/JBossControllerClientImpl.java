@@ -57,8 +57,11 @@ public class JBossControllerClientImpl implements JBossControllerClient {
 
     public JBossControllerClientImpl() {
 
+        this.host = JBossControllerClient.DEFAULT_HOST;
+        this.port = JBossControllerClient.DEFAULT_PORT;
         this.username = null;
         this.password = null;
+
         this.disableLocalAuthentication = false;
         this.initializeConsole = false;
         this.connectionTimeout = -1;
@@ -66,6 +69,55 @@ public class JBossControllerClientImpl implements JBossControllerClient {
     }
 
     // JBossControllerClient implementation ----------------------------------------------------------------------------
+
+    @Override
+    public void setHost(String host) {
+
+        this.host = host;
+    }
+
+    @Override
+    public String getHost() {
+
+        return host;
+    }
+
+    @Override
+    public void setPort(int port) {
+
+        this.port = port;
+    }
+
+    @Override
+    public int getPort() {
+
+        return port;
+    }
+
+    @Override
+    public void setUsername(String username) {
+
+        this.username = username;
+    }
+
+    @Override
+    public String getUsername() {
+
+        return username;
+    }
+
+    @Override
+    public void setPassword(char[] password) {
+
+        this.password = new char[password.length];
+        System.arraycopy(password, 0, this.password, 0, password.length);
+    }
+
+    @Override
+    public char[] getPassword() {
+
+        return password;
+    }
 
     @Override
     public void connect() throws JBossCliException {

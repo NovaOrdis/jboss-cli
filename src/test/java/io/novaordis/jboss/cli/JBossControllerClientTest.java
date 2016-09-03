@@ -20,7 +20,9 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -41,6 +43,34 @@ public abstract class JBossControllerClientTest {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void configuration() throws Exception {
+
+        JBossControllerClient c = getJBossControllerClientToTest();
+
+        assertEquals(JBossControllerClient.DEFAULT_HOST, c.getHost());
+        assertEquals(JBossControllerClient.DEFAULT_PORT, c.getPort());
+        assertNull(c.getUsername());
+        assertNull(c.getPassword());
+
+        c.setHost("something");
+        assertEquals("something", c.getHost());
+
+        c.setPort(1234);
+        assertEquals(1234, c.getPort());
+
+        c.setUsername("somebody");
+        assertEquals("somebody", c.getUsername());
+
+        c.setPassword(new char[] { 'a', 'b', 'c', 'd'});
+        char[] p = c.getPassword();
+        assertEquals(4, p.length);
+        assertEquals('a', p[0]);
+        assertEquals('b', p[1]);
+        assertEquals('c', p[2]);
+        assertEquals('d', p[3]);
+    }
 
     @Test
     public void getAttributeBeforeConnecting() throws Exception {
