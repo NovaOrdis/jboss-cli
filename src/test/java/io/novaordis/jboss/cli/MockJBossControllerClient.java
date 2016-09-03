@@ -88,7 +88,7 @@ public class MockJBossControllerClient implements JBossControllerClient {
     }
 
     @Override
-    public String getAttributeValue(String path, String attributeName) throws JBossCliException {
+    public Object getAttributeValue(String path, String attributeName) throws JBossCliException {
         throw new RuntimeException("getAttributeValue() NOT YET IMPLEMENTED");
     }
 

@@ -34,9 +34,9 @@ public class Main {
 
         c.connect();
 
-        String s = c.getAttributeValue("/", "name");
+        Object o = c.getAttributeValue("/", "name");
 
-        System.out.println("value: " + s);
+        System.out.println("value: " + o);
 
         c.disconnect();
     }

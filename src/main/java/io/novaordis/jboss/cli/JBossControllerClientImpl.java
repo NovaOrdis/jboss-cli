@@ -161,7 +161,7 @@ public class JBossControllerClientImpl implements JBossControllerClient {
     }
 
     @Override
-    public String getAttributeValue(String path, String attributeName) throws JBossCliException {
+    public Object getAttributeValue(String path, String attributeName) throws JBossCliException {
 
         if (!connected) {
 

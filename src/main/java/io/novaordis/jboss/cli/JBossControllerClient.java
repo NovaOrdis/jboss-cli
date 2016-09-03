@@ -44,6 +44,9 @@ public interface JBossControllerClient {
      * If "io.novaordis.jboss.controller.client.impl" is set, will use the value as the implementation class name,
      * attempt to instantiate and return the instance. Otherwise, will return the default implementation.
      *
+     * Important: each invocation will return a <b>new</b> instance, so if the calling layer wants to maintain the
+     * instance state, it must cache it.
+     *
      * @exception IllegalStateException if there is anything that prevents the factory method from producing an
      * instance.
      */
@@ -112,11 +115,14 @@ public interface JBossControllerClient {
     boolean isConnected();
 
     /**
-     * Sends a command into the controller that returns the value of the specified attribute, as String.
+     * Sends a command into the controller that returns the value of the specified attribute.
      *
-     * null can be returned if the attribute is not defined.
+     * null will be returned if the attribute is not defined.
+     *
+     * The returned object instance could be a String, Integer, etc. depending on the type of the ModelNode returned
+     * by the controller.
      *
      * @throws JBossCliException if the path is invalid (does not exist on controller)
      */
-    String getAttributeValue(String path, String attributeName) throws JBossCliException;
+    Object getAttributeValue(String path, String attributeName) throws JBossCliException;
 }
