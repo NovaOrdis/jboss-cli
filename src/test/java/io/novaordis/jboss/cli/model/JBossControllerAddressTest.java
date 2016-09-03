@@ -16,6 +16,7 @@
 
 package io.novaordis.jboss.cli.model;
 
+import io.novaordis.jboss.cli.JBossCliException;
 import io.novaordis.jboss.cli.JBossControllerClient;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -161,6 +162,16 @@ public class JBossControllerAddressTest {
     // constructor -----------------------------------------------------------------------------------------------------
 
     @Test
+    public void constructor() throws Exception {
+
+        JBossControllerAddress a = new JBossControllerAddress("something", 1);
+
+        assertEquals("something", a.getHost());
+        assertEquals(1, a.getPort());
+        assertEquals("something:1", a.toString());
+    }
+
+    @Test
     public void constructor_nullHost() throws Exception {
 
         try {
@@ -228,6 +239,62 @@ public class JBossControllerAddressTest {
 
         assertFalse(a.equals(a2));
         assertFalse(a2.equals(a));
+    }
+
+    // parseAddress() --------------------------------------------------------------------------------------------------
+
+    @Test
+    public void parseAddress() throws Exception {
+
+        JBossControllerAddress a = JBossControllerAddress.parseAddress("something");
+
+        assertEquals("something", a.getHost());
+        assertEquals(JBossControllerClient.DEFAULT_PORT, a.getPort());
+        assertNull(a.getUsername());
+        assertNull(a.getPassword());
+        assertEquals("something:" + JBossControllerClient.DEFAULT_PORT, a.toString());
+    }
+
+    @Test
+    public void parseAddress_MissingPort() throws Exception {
+
+        try {
+            JBossControllerAddress.parseAddress("something:");
+            fail("should have thrown exception");
+        }
+        catch(JBossCliException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("missing port information", msg);
+        }
+    }
+
+    @Test
+    public void parseAddress_InvalidPort() throws Exception {
+
+        try {
+            JBossControllerAddress.parseAddress("something:blah");
+            fail("should have thrown exception");
+        }
+        catch(JBossCliException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("invalid port value \"blah\"" , msg);
+        }
+    }
+
+    @Test
+    public void parseAddress_HostAndPort() throws Exception {
+
+        JBossControllerAddress a = JBossControllerAddress.parseAddress("something:5");
+
+        assertEquals("something", a.getHost());
+        assertEquals(5, a.getPort());
+        assertNull(a.getUsername());
+        assertNull(a.getPassword());
+        assertEquals("something:5", a.toString());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

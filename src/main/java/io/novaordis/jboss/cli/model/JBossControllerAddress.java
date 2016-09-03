@@ -16,6 +16,7 @@
 
 package io.novaordis.jboss.cli.model;
 
+import io.novaordis.jboss.cli.JBossCliException;
 import io.novaordis.jboss.cli.JBossControllerClient;
 
 /**
@@ -32,6 +33,42 @@ public class JBossControllerAddress {
 
     // Static ----------------------------------------------------------------------------------------------------------
 
+    public static JBossControllerAddress parseAddress(String s) throws JBossCliException {
+
+
+
+        int i = s.indexOf(":");
+
+        if (i == -1) {
+
+            return new JBossControllerAddress(s, JBossControllerClient.DEFAULT_PORT);
+        }
+        else {
+
+            String host = s.substring(0, i);
+
+            if (i == s.length() - 1) {
+
+                throw new JBossCliException("missing port information");
+            }
+
+            String sp = s.substring(i + 1);
+
+            int port;
+
+            try {
+
+                port = Integer.parseInt(sp);
+            }
+            catch (Exception e) {
+
+                throw new JBossCliException("invalid port value \"" + sp + "\"");
+            }
+
+            return new JBossControllerAddress(host, port);
+        }
+    }
+
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private String host;
@@ -45,6 +82,14 @@ public class JBossControllerAddress {
 
         this.host = JBossControllerClient.DEFAULT_HOST;
         this.port = JBossControllerClient.DEFAULT_PORT;
+    }
+
+    /**
+     * @exception IllegalArgumentException on null host or invalid port values.
+     */
+    public JBossControllerAddress(String host, int port) {
+
+        this(host, port, null);
     }
 
     /**
