@@ -164,6 +164,16 @@ public class JBossControllerAddressTest {
     @Test
     public void constructor() throws Exception {
 
+        JBossControllerAddress a = new JBossControllerAddress("something");
+
+        assertEquals("something", a.getHost());
+        assertEquals(JBossControllerClient.DEFAULT_PORT, a.getPort());
+        assertEquals("something:" + JBossControllerClient.DEFAULT_PORT, a.toString());
+    }
+
+    @Test
+    public void constructor2() throws Exception {
+
         JBossControllerAddress a = new JBossControllerAddress("something", 1);
 
         assertEquals("something", a.getHost());

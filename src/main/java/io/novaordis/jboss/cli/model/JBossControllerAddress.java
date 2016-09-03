@@ -85,6 +85,16 @@ public class JBossControllerAddress {
     }
 
     /**
+     * Default port value.
+     *
+     * @exception IllegalArgumentException on null host.
+     */
+    public JBossControllerAddress(String host) {
+
+        this(host, JBossControllerClient.DEFAULT_PORT, null);
+    }
+
+    /**
      * @exception IllegalArgumentException on null host or invalid port values.
      */
     public JBossControllerAddress(String host, int port) {
