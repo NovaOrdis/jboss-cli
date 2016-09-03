@@ -34,7 +34,7 @@ public class Main {
 
         c.connect();
 
-        c.getAttributeValue("/", "something");
+        c.getAttributeValue("/", "name");
 
         c.disconnect();
     }
