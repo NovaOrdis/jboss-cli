@@ -10,7 +10,6 @@
 jboss_cli_dependencies="\
 jboss-as-cli \
 jboss-dmr \
-slf4j-api \
 jboss-logging \
 staxmapper \
 jboss-as-protocol \
@@ -20,7 +19,9 @@ jboss-threads \
 jboss-remoting \
 aesh \
 xnio-api \
-xnio-nio"
+xnio-nio \
+slf4j-api \
+slf4j-jboss-logmanager"
 
 #
 # Build the classpath fragment required by the CLI wrapper to work using JARs deployed within the specified JBoss
