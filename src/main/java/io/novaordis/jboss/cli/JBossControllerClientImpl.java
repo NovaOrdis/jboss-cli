@@ -24,6 +24,7 @@ import org.jboss.as.cli.parsing.ParserUtil;
 import org.jboss.as.cli.parsing.operation.OperationFormat;
 import org.jboss.as.controller.client.ModelControllerClient;
 import org.jboss.dmr.ModelNode;
+import org.jboss.dmr.ModelType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -207,7 +208,18 @@ public class JBossControllerClientImpl implements JBossControllerClient {
 
         if(Util.isSuccess(result)) {
 
-            System.out.println("success: " + result);
+            //System.out.println("success: " + result);
+
+            ModelNode r = result.get(Util.RESULT);
+            ModelType type = r.getType();
+
+            if (ModelType.STRING.equals(type)) {
+
+                return r.asString();
+            }
+            else {
+                throw new RuntimeException("NOT YET IMPLEMENTED: handling type " + type);
+            }
 
         } else {
 
