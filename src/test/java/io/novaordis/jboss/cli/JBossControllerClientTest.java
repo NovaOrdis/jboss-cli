@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -90,6 +91,63 @@ public abstract class JBossControllerClientTest {
             assertTrue(msg.contains("not connected"));
         }
     }
+
+    // getInstance() ---------------------------------------------------------------------------------------------------
+
+    @Test
+    public void getInstance_DefaultBehavior() throws Exception {
+
+        JBossControllerClient c = JBossControllerClient.getInstance();
+
+        assertNotNull(c);
+        assertTrue(c instanceof JBossControllerClientImpl);
+    }
+
+    @Test
+    public void getInstance_ConfiguredImplementationClass() throws Exception {
+
+        System.setProperty(
+                JBossControllerClient.JBOSS_CONTROLLER_CLIENT_IMPLEMENTATION_SYSTEM_PROPERTY_NAME,
+                MockJBossControllerClient.class.getName());
+
+        try {
+
+            JBossControllerClient c = JBossControllerClient.getInstance();
+
+            assertNotNull(c);
+            assertTrue(c instanceof MockJBossControllerClient);
+        }
+        finally {
+
+            System.clearProperty(JBossControllerClient.JBOSS_CONTROLLER_CLIENT_IMPLEMENTATION_SYSTEM_PROPERTY_NAME);
+        }
+    }
+
+    @Test
+    public void getInstance_CustomClassNotFound() throws Exception {
+
+        System.setProperty(
+                JBossControllerClient.JBOSS_CONTROLLER_CLIENT_IMPLEMENTATION_SYSTEM_PROPERTY_NAME,
+                "there.is.no.such.Class");
+
+        try {
+
+            JBossControllerClient.getInstance();
+            fail("should have thrown exception");
+        }
+        catch(IllegalStateException e) {
+
+            ClassNotFoundException cnfe = (ClassNotFoundException)e.getCause();
+            assertNotNull(cnfe);
+
+            log.info(cnfe.getMessage());
+        }
+        finally {
+
+            System.clearProperty(JBossControllerClient.JBOSS_CONTROLLER_CLIENT_IMPLEMENTATION_SYSTEM_PROPERTY_NAME);
+        }
+    }
+
 
     // Package protected -----------------------------------------------------------------------------------------------
 

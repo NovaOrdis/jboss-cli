@@ -16,6 +16,9 @@
 
 package io.novaordis.jboss.cli;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Stateful JBoss controller client, requires connection via the connect() method, and it can be disconnected, thus
  * releasing resources. Local connection is possible, if the controller is located on the same host, for local
@@ -28,10 +31,43 @@ public interface JBossControllerClient {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
+    Logger log = LoggerFactory.getLogger(JBossControllerClient.class);
+
+    String JBOSS_CONTROLLER_CLIENT_IMPLEMENTATION_SYSTEM_PROPERTY_NAME = "io.novaordis.jboss.controller.client.impl";
+
     String DEFAULT_HOST = "localhost";
     int DEFAULT_PORT = 9999;
 
     // Static ----------------------------------------------------------------------------------------------------------
+
+    /**
+     * If "io.novaordis.jboss.controller.client.impl" is set, will use the value as the implementation class name,
+     * attempt to instantiate and return the instance. Otherwise, will return the default implementation.
+     *
+     * @exception IllegalStateException if there is anything that prevents the factory method from producing an
+     * instance.
+     */
+    static JBossControllerClient getInstance() throws IllegalStateException {
+
+        String className = System.getProperty(JBOSS_CONTROLLER_CLIENT_IMPLEMENTATION_SYSTEM_PROPERTY_NAME);
+
+        if (className == null) {
+
+            return new JBossControllerClientImpl();
+        }
+
+        try {
+
+            log.debug("jboss controller client implementation class name: " + className);
+
+            Class c = Class.forName(className);
+
+            return (JBossControllerClient)c.newInstance();
+        }
+        catch(Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
