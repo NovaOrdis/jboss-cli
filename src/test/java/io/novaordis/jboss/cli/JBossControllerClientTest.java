@@ -146,6 +146,47 @@ public abstract class JBossControllerClientTest {
         }
     }
 
+    // setControllerAddress() ------------------------------------------------------------------------------------------
+
+    @Test
+    public void setControllerAddress_Null() throws Exception {
+
+        JBossControllerClient c = getJBossControllerClientToTest();
+
+        try {
+            c.setControllerAddress(null);
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("null controller address", msg);
+        }
+    }
+
+    @Test
+    public void setControllerAddress() throws Exception {
+
+        JBossControllerClient c = getJBossControllerClientToTest();
+
+        JBossControllerAddress a = new JBossControllerAddress(
+                "some-user", new char[] { 'a'}, "some-host", "some-host", 2, "2");
+
+        c.setControllerAddress(a);
+
+        assertEquals("some-user", c.getUsername());
+        char[] p = c.getPassword();
+        assertEquals(1, p.length);
+        assertEquals('a', p[0]);
+        assertEquals("some-host", c.getHost());
+        assertEquals(2, c.getPort());
+
+        JBossControllerAddress a2 = c.getControllerAddress();
+
+        assertEquals(a, a2);
+        assertEquals(a2, a);
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------

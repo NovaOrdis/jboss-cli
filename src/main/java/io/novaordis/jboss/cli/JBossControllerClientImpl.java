@@ -92,6 +92,12 @@ public class JBossControllerClientImpl implements JBossControllerClient {
     }
 
     @Override
+    public JBossControllerAddress getControllerAddress() {
+
+        return controllerAddress;
+    }
+
+    @Override
     public void connect() throws JBossCliException {
 
         if (connected) {
@@ -212,6 +218,11 @@ public class JBossControllerClientImpl implements JBossControllerClient {
     // Public ----------------------------------------------------------------------------------------------------------
 
     public void setControllerAddress(JBossControllerAddress a) {
+
+        if (a == null) {
+            throw new IllegalArgumentException("null controller address");
+        }
+
         this.controllerAddress = a;
     }
 

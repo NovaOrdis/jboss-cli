@@ -60,6 +60,11 @@ public class MockJBossControllerClient implements JBossControllerClient {
     }
 
     @Override
+    public JBossControllerAddress getControllerAddress() {
+        throw new RuntimeException("getControllerAddress() NOT YET IMPLEMENTED");
+    }
+
+    @Override
     public void connect() throws JBossCliException {
         throw new RuntimeException("connect() NOT YET IMPLEMENTED");
     }

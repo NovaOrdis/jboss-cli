@@ -85,6 +85,8 @@ public interface JBossControllerClient {
 
     void setControllerAddress(JBossControllerAddress a);
 
+    JBossControllerAddress getControllerAddress();
+
     /**
      * Connects the client to the controller.
      *
