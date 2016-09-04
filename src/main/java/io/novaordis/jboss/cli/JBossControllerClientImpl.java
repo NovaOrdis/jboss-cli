@@ -56,7 +56,8 @@ public class JBossControllerClientImpl implements JBossControllerClient {
 
     public JBossControllerClientImpl() {
 
-        this.controllerAddress = new JBossControllerAddress();
+        this.controllerAddress = new JBossControllerAddress(
+                null, null, JBossControllerClient.DEFAULT_HOST, null, JBossControllerClient.DEFAULT_PORT, null);
 
         this.disableLocalAuthentication = false;
         this.initializeConsole = false;
@@ -66,28 +67,10 @@ public class JBossControllerClientImpl implements JBossControllerClient {
 
     // JBossControllerClient implementation ----------------------------------------------------------------------------
 
-    /**
-     * @see JBossControllerAddress#setHost(String)
-     */
-    @Override
-    public void setHost(String host) {
-
-        this.controllerAddress.setHost(host);
-    }
-
     @Override
     public String getHost() {
 
         return controllerAddress.getHost();
-    }
-
-    /**
-     * @see JBossControllerAddress#setPort(int)
-     */
-    @Override
-    public void setPort(int i) {
-
-        this.controllerAddress.setPort(i);
     }
 
     @Override
@@ -97,21 +80,9 @@ public class JBossControllerClientImpl implements JBossControllerClient {
     }
 
     @Override
-    public void setUsername(String username) {
-
-        this.controllerAddress.setUsername(username);
-    }
-
-    @Override
     public String getUsername() {
 
         return controllerAddress.getUsername();
-    }
-
-    @Override
-    public void setPassword(char[] c) {
-
-        this.controllerAddress.setPassword(c);
     }
 
     @Override
@@ -214,8 +185,6 @@ public class JBossControllerClientImpl implements JBossControllerClient {
 
         if(Util.isSuccess(result)) {
 
-            //System.out.println("success: " + result);
-
             ModelNode r = result.get(Util.RESULT);
             ModelType type = r.getType();
 
@@ -241,6 +210,10 @@ public class JBossControllerClientImpl implements JBossControllerClient {
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    public void setControllerAddress(JBossControllerAddress a) {
+        this.controllerAddress = a;
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

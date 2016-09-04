@@ -16,6 +16,8 @@
 
 package io.novaordis.jboss.cli;
 
+import io.novaordis.jboss.cli.model.JBossControllerAddress;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 9/3/16
@@ -33,18 +35,8 @@ public class MockJBossControllerClient implements JBossControllerClient {
     // JBossControllerClient implementation ----------------------------------------------------------------------------
 
     @Override
-    public void setHost(String host) {
-        throw new RuntimeException("setHost() NOT YET IMPLEMENTED");
-    }
-
-    @Override
     public String getHost() {
         throw new RuntimeException("getHost() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void setPort(int port) {
-        throw new RuntimeException("setPort() NOT YET IMPLEMENTED");
     }
 
     @Override
@@ -53,23 +45,18 @@ public class MockJBossControllerClient implements JBossControllerClient {
     }
 
     @Override
-    public void setUsername(String username) {
-        throw new RuntimeException("setUsername() NOT YET IMPLEMENTED");
-    }
-
-    @Override
     public String getUsername() {
         throw new RuntimeException("getUsername() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public void setPassword(char[] password) {
-        throw new RuntimeException("setPassword() NOT YET IMPLEMENTED");
+    public char[] getPassword() {
+        throw new RuntimeException("getPassword() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public char[] getPassword() {
-        throw new RuntimeException("getPassword() NOT YET IMPLEMENTED");
+    public void setControllerAddress(JBossControllerAddress a) {
+        throw new RuntimeException("setControllerAddress() NOT YET IMPLEMENTED");
     }
 
     @Override

@@ -16,6 +16,7 @@
 
 package io.novaordis.jboss.cli;
 
+import io.novaordis.jboss.cli.model.JBossControllerAddress;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,16 +56,13 @@ public abstract class JBossControllerClientTest {
         assertNull(c.getUsername());
         assertNull(c.getPassword());
 
-        c.setHost("something");
+        JBossControllerAddress a = new JBossControllerAddress(
+                "somebody", new char[] { 'a', 'b', 'c', 'd'}, "something", "something", 1234, "1234");
+        c.setControllerAddress(a);
+
         assertEquals("something", c.getHost());
-
-        c.setPort(1234);
         assertEquals(1234, c.getPort());
-
-        c.setUsername("somebody");
         assertEquals("somebody", c.getUsername());
-
-        c.setPassword(new char[] { 'a', 'b', 'c', 'd'});
         char[] p = c.getPassword();
         assertEquals(4, p.length);
         assertEquals('a', p[0]);
@@ -147,7 +145,6 @@ public abstract class JBossControllerClientTest {
             System.clearProperty(JBossControllerClient.JBOSS_CONTROLLER_CLIENT_IMPLEMENTATION_SYSTEM_PROPERTY_NAME);
         }
     }
-
 
     // Package protected -----------------------------------------------------------------------------------------------
 

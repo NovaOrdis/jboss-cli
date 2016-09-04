@@ -43,7 +43,9 @@ public class JBossControllerAddress {
         String username = null;
         char[] password = null;
         String host;
+        String hostLiteral;
         int port;
+        String portLiteral = null;
 
         String hostAndPort;
 
@@ -97,70 +99,121 @@ public class JBossControllerAddress {
                 throw new JBossCliException("missing port information");
             }
 
-            String sp = hostAndPort.substring(i + 1);
+            portLiteral = hostAndPort.substring(i + 1);
 
             try {
 
-                port = Integer.parseInt(sp);
+                port = Integer.parseInt(portLiteral);
             }
             catch (Exception e) {
 
-                throw new JBossCliException("invalid port value \"" + sp + "\"", e);
+                throw new JBossCliException("invalid port value \"" + portLiteral + "\"", e);
             }
         }
 
+        if (host.length() == 0) {
+
+            host = JBossControllerClient.DEFAULT_HOST;
+            hostLiteral = null;
+        }
+        else {
+            hostLiteral = host;
+        }
+
+        JBossControllerAddress address;
+
         try {
 
-            return new JBossControllerAddress(username, password, host, port);
+            address = new JBossControllerAddress(username, password, host, hostLiteral, port, portLiteral);
         }
         catch(IllegalArgumentException e) {
 
             throw new JBossCliException(e.getMessage(), e);
         }
+
+        return address;
     }
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private String host;
+    private String hostLiteral;
     private int port;
+    private String portLiteral;
     private String username;
     private char[] password;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    /**
+     * Defaults
+     */
     public JBossControllerAddress() {
 
-        this.host = JBossControllerClient.DEFAULT_HOST;
-        this.port = JBossControllerClient.DEFAULT_PORT;
-    }
-
-    /**
-     * Default port value.
-     *
-     * @exception IllegalArgumentException on null host.
-     */
-    public JBossControllerAddress(String host) {
-
-        this(null, null, host, JBossControllerClient.DEFAULT_PORT);
+        this(null, null, JBossControllerClient.DEFAULT_HOST, null, JBossControllerClient.DEFAULT_PORT, null);
     }
 
     /**
      * @exception IllegalArgumentException on null host or invalid port values.
+     * @exception IllegalArgumentException if null password when the username is not null
      */
-    public JBossControllerAddress(String host, int port) {
+    public JBossControllerAddress(String username, char[] password,
+                                   String host, String hostLiteral,
+                                   int port, String portLiteral) {
 
-        this(null, null, host, port);
-    }
+        if (host == null) {
+            throw new IllegalArgumentException("null host");
+        }
 
-    /**
-     * @exception IllegalArgumentException on null host or invalid port values.
-     */
-    public JBossControllerAddress(String username, char[] password, String host, int port) {
+        this.host = host;
+        this.hostLiteral = hostLiteral;
 
-        setHost(host);
-        setPort(port);
-        setUsername(username);
-        setPassword(password);
+        if (!JBossControllerClient.DEFAULT_HOST.equals(host)) {
+
+            if (hostLiteral == null) {
+                throw new IllegalArgumentException("null host literal");
+            }
+        }
+
+        if (hostLiteral != null && !host.equals(hostLiteral)) {
+            throw new IllegalArgumentException(
+                    "host \"" + host + "\" does not match host literal \"" + hostLiteral + "\"");
+        }
+
+        if (port < 1 || port > 65535) {
+            throw new IllegalArgumentException("invalid port value " + port);
+        }
+
+        this.port = port;
+        this.portLiteral = portLiteral;
+
+        if (JBossControllerClient.DEFAULT_PORT != port) {
+
+            if (portLiteral == null) {
+                throw new IllegalArgumentException("null port literal");
+            }
+        }
+
+        if (portLiteral != null && !portLiteral.equals("" + port)) {
+            throw new IllegalArgumentException(
+                    "port \"" + port + "\" does not match port literal \"" + portLiteral + "\"");
+        }
+
+        this.username = username;
+
+        if (password == null) {
+
+            if (username != null) {
+                throw new IllegalArgumentException("null password");
+            }
+
+            this.password = null;
+        }
+        else {
+
+            this.password = new char[password.length];
+            System.arraycopy(password, 0, this.password, 0, password.length);
+        }
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -173,26 +226,23 @@ public class JBossControllerAddress {
     }
 
     /**
-     * @exception IllegalArgumentException if the argument is null.
+     * @return the string representation of the host name. Always a non-null String, with the exception of the case
+     * when the host is "localhost" (JBossControllerClient.DEFAULT_HOST) and it is specified implicitly.
      */
-    public void setHost(String s) {
-
-        if (s == null) {
-            throw new IllegalArgumentException("null host");
-        }
-        this.host = s;
+    public String getHostLiteral() {
+        return hostLiteral;
     }
 
     public int getPort() {
         return port;
     }
 
-    public void setPort(int i) {
-
-        if (i < 1 || i > 65535) {
-            throw new IllegalArgumentException("invalid port value " + i);
-        }
-        this.port = i;
+    /**
+     * @return the string representation of the port. Always a non-null String, with the exception of the case when the
+     * port is 9999 (JBossControllerClient.DEFAULT_PORT) and it is specified implicitly.
+     */
+    public String getPortLiteral() {
+        return portLiteral;
     }
 
     /**
@@ -202,32 +252,8 @@ public class JBossControllerAddress {
         return username;
     }
 
-    public void setUsername(String s) {
-        this.username = s;
-    }
-
     public char[] getPassword() {
         return password;
-    }
-
-    /**
-     * @exception IllegalArgumentException if null password when the username is not null
-     */
-    public void setPassword(char[] chars) {
-
-        if (chars == null) {
-
-            if (username != null) {
-                throw new IllegalArgumentException("null password");
-            }
-
-            this.password = null;
-        }
-        else {
-
-            this.password = new char[chars.length];
-            System.arraycopy(chars, 0, password, 0, chars.length);
-        }
     }
 
     @Override

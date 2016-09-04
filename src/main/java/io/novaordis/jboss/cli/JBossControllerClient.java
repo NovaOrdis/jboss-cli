@@ -16,6 +16,7 @@
 
 package io.novaordis.jboss.cli;
 
+import io.novaordis.jboss.cli.model.JBossControllerAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,34 +75,28 @@ public interface JBossControllerClient {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    void setHost(String host);
     String getHost();
 
-    void setPort(int port);
     int getPort();
 
-    void setUsername(String username);
     String getUsername();
 
-    void setPassword(char[] password);
     char[] getPassword();
+
+    void setControllerAddress(JBossControllerAddress a);
 
     /**
      * Connects the client to the controller.
      *
-     * The client instance must be configured before attempting to connect it, by using the set...() methods.
-     *
-     * If no set...() method is invoked, the default are used:
+     * The client instance must be configured before attempting to connect it, by using the setControllerAddress()
+     * method. The setControllerAddress() is not invoked, the default are used:
      *
      * host: "localhost"
      * port: 9999
      * username: null (local connection attempted)
      * password: null
      *
-     * @see JBossControllerClient#setHost(String)
-     * @see JBossControllerClient#setPort(int)
-     * @see JBossControllerClient#setUsername(String)
-     * @see JBossControllerClient#setPassword(char[])
+     * @see JBossControllerClient#setControllerAddress(JBossControllerAddress)
      *
      * @throws JBossCliException
      */
