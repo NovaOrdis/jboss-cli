@@ -28,6 +28,17 @@ slf4j-jboss-logmanager"
 # installation. If it successful, return the classpath fragment at stdout and returns 0. If not, it sends an error
 # message at stderr and returns 1.
 #
+# SLF4J binding note: if the classpath you are going to plug this classpath fragment into already contains a SLF4J
+# binding, slf4j-jboss-logmanager listed above must be commented out, because otherwise you'll get a binding conflict
+# that looks like this:
+#
+#SLF4J: Class path contains multiple SLF4J bindings.
+#SLF4J: Found binding in [jar:file:/Users/ovidiu/runtime/os-stats-1.0.1-SNAPSHOT-6/lib/slf4j-log4j12-1.7.12.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+#SLF4J: Found binding in [jar:file:/Users/ovidiu/runtime/jboss-eap-6.4.6/modules/system/layers/base/org/slf4j/impl/main/slf4j-jboss-logmanager-1.0.3.GA-redhat-1.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+#SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+#SLF4J: Actual binding is of type [org.slf4j.impl.Log4jLoggerFactory]
+#
+
 function get-jboss-cli-classpath() {
 
     local jboss_home=$1
