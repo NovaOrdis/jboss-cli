@@ -226,6 +226,12 @@ public class JBossControllerClientImpl implements JBossControllerClient {
         this.controllerAddress = a;
     }
 
+    @Override
+    public String toString() {
+
+        return controllerAddress == null ? "null" : controllerAddress.toString();
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
