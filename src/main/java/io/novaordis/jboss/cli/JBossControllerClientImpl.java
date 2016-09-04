@@ -200,7 +200,7 @@ public class JBossControllerClientImpl implements JBossControllerClient {
             }
             else if (ModelType.INT.equals(type)) {
 
-                return "" + r.asInt();
+                return r.asInt();
             }
             else {
                 throw new RuntimeException("NOT YET IMPLEMENTED: handling type " + type);
