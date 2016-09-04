@@ -44,33 +44,49 @@ public interface JBossControllerClient {
     /**
      * If "io.novaordis.jboss.controller.client.impl" is set, will use the value as the implementation class name,
      * attempt to instantiate and return the instance. Otherwise, will return the default implementation.
-     *
+     * <p>
      * Important: each invocation will return a <b>new</b> instance, so if the calling layer wants to maintain the
      * instance state, it must cache it.
      *
-     * @exception IllegalStateException if there is anything that prevents the factory method from producing an
-     * instance.
+     * @throws IllegalStateException if there is anything that prevents the factory method from producing an
+     *                               instance.
      */
-    static JBossControllerClient getInstance() throws IllegalStateException {
+    static JBossControllerClient getInstance(JBossControllerAddress address) throws IllegalStateException {
 
         String className = System.getProperty(JBOSS_CONTROLLER_CLIENT_IMPLEMENTATION_SYSTEM_PROPERTY_NAME);
 
+        JBossControllerClient client;
+
         if (className == null) {
 
-            return new JBossControllerClientImpl();
+            client = new JBossControllerClientImpl();
+            log.debug("jboss controller client default implementation" + client);
+        }
+        else {
+
+            try {
+
+                log.debug("jboss controller client implementation class name: " + className);
+
+                Class c = Class.forName(className);
+                client = (JBossControllerClient) c.newInstance();
+
+            } catch (Exception e) {
+
+                throw new IllegalStateException(e);
+            }
         }
 
-        try {
+        if (address == null) {
 
-            log.debug("jboss controller client implementation class name: " + className);
-
-            Class c = Class.forName(className);
-
-            return (JBossControllerClient)c.newInstance();
+            address = new JBossControllerAddress();
+            log.debug("using default address " + address);
         }
-        catch(Exception e) {
-            throw new IllegalStateException(e);
-        }
+
+        client.setControllerAddress(address);
+
+        log.debug("jboss controller address instance " + client);
+        return client;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

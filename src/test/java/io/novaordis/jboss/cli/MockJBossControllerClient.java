@@ -30,6 +30,8 @@ public class MockJBossControllerClient implements JBossControllerClient {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private JBossControllerAddress controllerAddress;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // JBossControllerClient implementation ----------------------------------------------------------------------------
@@ -56,12 +58,14 @@ public class MockJBossControllerClient implements JBossControllerClient {
 
     @Override
     public void setControllerAddress(JBossControllerAddress a) {
-        throw new RuntimeException("setControllerAddress() NOT YET IMPLEMENTED");
+
+        this.controllerAddress = a;
     }
 
     @Override
     public JBossControllerAddress getControllerAddress() {
-        throw new RuntimeException("getControllerAddress() NOT YET IMPLEMENTED");
+
+        return controllerAddress;
     }
 
     @Override

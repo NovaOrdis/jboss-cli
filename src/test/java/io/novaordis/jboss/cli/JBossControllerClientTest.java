@@ -95,10 +95,26 @@ public abstract class JBossControllerClientTest {
     @Test
     public void getInstance_DefaultBehavior() throws Exception {
 
-        JBossControllerClient c = JBossControllerClient.getInstance();
+        JBossControllerAddress address = new JBossControllerAddress(
+                "test-user", new char[] { 't', 'e', 's', 't'}, "test-host", "test-host", 7777, "7777");
+
+        JBossControllerClient c = JBossControllerClient.getInstance(address);
 
         assertNotNull(c);
         assertTrue(c instanceof JBossControllerClientImpl);
+
+        JBossControllerAddress address2 = c.getControllerAddress();
+        assertEquals("test-user", address2.getUsername());
+        char[] password = address2.getPassword();
+        assertEquals(4, password.length);
+        assertEquals('t', password[0]);
+        assertEquals('e', password[1]);
+        assertEquals('s', password[2]);
+        assertEquals('t', password[3]);
+        assertEquals("test-host", address2.getHost());
+        assertEquals("test-host", address2.getHostLiteral());
+        assertEquals(7777, address2.getPort());
+        assertEquals("7777", address2.getPortLiteral());
     }
 
     @Test
@@ -110,10 +126,27 @@ public abstract class JBossControllerClientTest {
 
         try {
 
-            JBossControllerClient c = JBossControllerClient.getInstance();
+            JBossControllerAddress address = new JBossControllerAddress(
+                    "test-user-2", new char[] { 't', 'e', 's', 't'}, "test-host-2", "test-host-2", 8888, "8888");
+
+
+            JBossControllerClient c = JBossControllerClient.getInstance(address);
 
             assertNotNull(c);
             assertTrue(c instanceof MockJBossControllerClient);
+
+            JBossControllerAddress address2 = c.getControllerAddress();
+            assertEquals("test-user-2", address2.getUsername());
+            char[] password = address2.getPassword();
+            assertEquals(4, password.length);
+            assertEquals('t', password[0]);
+            assertEquals('e', password[1]);
+            assertEquals('s', password[2]);
+            assertEquals('t', password[3]);
+            assertEquals("test-host-2", address2.getHost());
+            assertEquals("test-host-2", address2.getHostLiteral());
+            assertEquals(8888, address2.getPort());
+            assertEquals("8888", address2.getPortLiteral());
         }
         finally {
 
@@ -130,7 +163,10 @@ public abstract class JBossControllerClientTest {
 
         try {
 
-            JBossControllerClient.getInstance();
+            JBossControllerAddress address = new JBossControllerAddress(
+                    "test-user-2", new char[] { 't', 'e', 's', 't'}, "test-host-2", "test-host-2", 8888, "8888");
+
+            JBossControllerClient.getInstance(address);
             fail("should have thrown exception");
         }
         catch(IllegalStateException e) {
