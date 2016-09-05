@@ -137,6 +137,44 @@ public class ModelNodeUtil {
         }
     }
 
+    public static ModelNode buildFailure(String failureDescription) {
+
+        if (failureDescription == null) {
+
+            throw new IllegalArgumentException("null failure description");
+        }
+
+        ModelNode result = new ModelNode();
+
+        result.get(Util.OUTCOME).set(FAILED);
+        result.get(Util.FAILURE_DESCRIPTION).set(failureDescription);
+        return result;
+    }
+
+    public static ModelNode buildSuccess(Object attributeValue) {
+
+        if (attributeValue == null) {
+
+            throw new IllegalArgumentException("null attribute value");
+        }
+
+        ModelNode result = new ModelNode();
+
+        result.get(Util.OUTCOME).set(Util.SUCCESS);
+
+        if (attributeValue instanceof String) {
+            result.get(Util.RESULT).set((String)attributeValue);
+        }
+        else if (attributeValue instanceof Integer) {
+            result.get(Util.RESULT).set((Integer)attributeValue);
+        }
+        else {
+            throw new RuntimeException("SUPPORT FOR " + attributeValue.getClass().getName() + " NOT YET IMPLEMENTED");
+        }
+
+        return result;
+    }
+
     // Attributes ------------------------------------------------------------------------------------------------------
 
     // Constructors ----------------------------------------------------------------------------------------------------

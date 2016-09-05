@@ -329,7 +329,7 @@ public abstract class JBossControllerClientTest {
         catch(JBossCliException e) {
             String s = e.getMessage();
             log.info(s);
-            assertEquals("", s);
+            assertEquals("JBAS014883: No resource definition is registered for address [(\"a\" => \"b\")]", s);
         }
 
         c.disconnect();

@@ -38,8 +38,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -55,15 +53,15 @@ public class MockCommandContext implements CommandContext {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Map<String, Map<String, Object>> values;
-
     private boolean connected;
+
+    private MockModelControllerClient modelControllerClient;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public MockCommandContext() {
 
-        this.values = new HashMap<>();
+        this.modelControllerClient =  new MockModelControllerClient();
     }
 
     // CommandContext implementation -----------------------------------------------------------------------------------
@@ -125,7 +123,8 @@ public class MockCommandContext implements CommandContext {
 
     @Override
     public ModelControllerClient getModelControllerClient() {
-        throw new RuntimeException("getModelControllerClient() NOT YET IMPLEMENTED");
+
+        return modelControllerClient;
     }
 
     @Override
@@ -148,7 +147,8 @@ public class MockCommandContext implements CommandContext {
 
     @Override
     public void disconnectController() {
-        throw new RuntimeException("disconnectController() NOT YET IMPLEMENTED");
+
+        connected = false;
     }
 
     @Override
@@ -263,7 +263,8 @@ public class MockCommandContext implements CommandContext {
 
     @Override
     public boolean isResolveParameterValues() {
-        throw new RuntimeException("isResolveParameterValues() NOT YET IMPLEMENTED");
+
+        return false;
     }
 
     @Override
@@ -303,14 +304,17 @@ public class MockCommandContext implements CommandContext {
      */
     public void install(String path, String attributeName, Object attributeValue) {
 
-        Map<String, Object> attributes = values.get(path);
+        modelControllerClient.install(path, attributeName, attributeValue);
+    }
 
-        if (attributes == null) {
-            attributes = new HashMap<>();
-            values.put(path, attributes);
-        }
+    public boolean isConnected() {
+        return connected;
+    }
 
-        attributes.put(attributeName, attributeValue);
+    @Override
+    public String toString() {
+
+        return "MockCommandContext[" + (isConnected() ? " connected" : "not connected") + "]";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

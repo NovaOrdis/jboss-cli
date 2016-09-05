@@ -37,8 +37,8 @@ public class Main {
 //        String path = "/subsystem=web/connector=http";
 //        String attributeName = "bytesReceived";
 
-        String path = "/subsystem=no-such-path";
-        String attributeName = "name";
+        String path = "/";
+        String attributeName = "no-such-attr";
 
         Object o = c.getAttributeValue(path, attributeName);
 

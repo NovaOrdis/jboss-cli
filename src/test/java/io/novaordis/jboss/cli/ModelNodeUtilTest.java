@@ -18,6 +18,7 @@ package io.novaordis.jboss.cli;
 
 import org.jboss.as.cli.Util;
 import org.jboss.dmr.ModelNode;
+import org.jboss.dmr.ModelType;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -277,6 +278,73 @@ public class ModelNodeUtilTest {
 
         Object result = ModelNodeUtil.operationResponseToValue(response);
         assertNull(result);
+    }
+
+    // buildFailure() --------------------------------------------------------------------------------------------------
+
+    @Test
+    public void buildFailure_NullDescription() throws Exception {
+
+        try {
+            ModelNodeUtil.buildFailure(null);
+        }
+        catch(IllegalArgumentException e) {
+            assertEquals("null failure description", e.getMessage());
+        }
+    }
+
+    @Test
+    public void buildFailure() throws Exception {
+
+        ModelNode failure = ModelNodeUtil.buildFailure("some failure description");
+
+        assertFalse(Util.isSuccess(failure));
+
+        String failureDescription = Util.getFailureDescription(failure);
+
+        assertEquals("some failure description", failureDescription);
+    }
+
+    // buildFailure() --------------------------------------------------------------------------------------------------
+
+    @Test
+    public void buildSuccess_String() throws Exception {
+
+        ModelNode n = ModelNodeUtil.buildSuccess("test");
+
+        assertTrue(Util.isSuccess(n));
+
+        ModelNode result = n.get(Util.RESULT);
+
+        assertEquals(ModelType.STRING, result.getType());
+        assertEquals("test", result.asString());
+    }
+
+    @Test
+    public void buildSuccess_Integer() throws Exception {
+
+        ModelNode n = ModelNodeUtil.buildSuccess(1);
+
+        assertTrue(Util.isSuccess(n));
+
+        ModelNode result = n.get(Util.RESULT);
+
+        assertEquals(ModelType.INT, result.getType());
+        assertEquals(1, result.asInt());
+    }
+
+    @Test
+    public void buildSuccess_Null() throws Exception {
+
+        try {
+
+            ModelNodeUtil.buildSuccess(null);
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            assertEquals("null attribute value", msg);
+        }
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
