@@ -8,7 +8,6 @@
 #
 
 jboss_cli_dependencies="\
-jboss-as-cli \
 jboss-dmr \
 jboss-logging \
 staxmapper \
