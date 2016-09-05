@@ -17,6 +17,7 @@
 package io.novaordis.jboss.cli;
 
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
+import org.jboss.as.cli.CommandContextFactory;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -333,6 +334,24 @@ public abstract class JBossControllerClientTest {
         }
 
         c.disconnect();
+    }
+
+    // setCommandContextFactory() --------------------------------------------------------------------------------------
+
+    @Test
+    public void setCommandContextFactory_NotACommandContextFactoryInstance() throws Exception {
+
+        JBossControllerClient c = getJBossControllerClientToTest();
+
+        try {
+            c.setCommandContextFactory(new Object());
+            fail("should throw exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("is not a " + CommandContextFactory.class.getName() + " instance"));
+        }
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

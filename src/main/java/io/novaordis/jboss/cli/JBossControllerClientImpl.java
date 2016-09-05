@@ -97,9 +97,14 @@ public class JBossControllerClientImpl implements JBossControllerClient {
     }
 
     @Override
-    public void setCommandContextFactory(CommandContextFactory factory) {
+    public void setCommandContextFactory(Object factory) {
 
-        this.factory = factory;
+        if (!(factory instanceof CommandContextFactory)) {
+            throw new IllegalArgumentException(
+                    factory + " is not a " + CommandContextFactory.class.getName() + " instance");
+        }
+
+        this.factory = (CommandContextFactory)factory;
     }
 
     @Override

@@ -17,7 +17,6 @@
 package io.novaordis.jboss.cli;
 
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
-import org.jboss.as.cli.CommandContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -142,6 +141,10 @@ public interface JBossControllerClient {
 
     /**
      * Install a custom command context factory. If not installed, CommandContextFactory.getInstance() is used.
+     *
+     * The method is not typed, so we can avoid declaring dependencies.
+     *
+     * @exception IllegalArgumentException if the argument is not a CommandContextFactory instance.
      */
-    void setCommandContextFactory(CommandContextFactory commandContextFactory);
+    void setCommandContextFactory(Object commandContextFactory);
 }
