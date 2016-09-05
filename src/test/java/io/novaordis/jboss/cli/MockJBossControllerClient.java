@@ -17,6 +17,7 @@
 package io.novaordis.jboss.cli;
 
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
+import org.jboss.as.cli.CommandContextFactory;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -86,6 +87,11 @@ public class MockJBossControllerClient implements JBossControllerClient {
     @Override
     public Object getAttributeValue(String path, String attributeName) throws JBossCliException {
         throw new RuntimeException("getAttributeValue() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void setCommandContextFactory(CommandContextFactory commandContextFactory) {
+        throw new RuntimeException("setCommandContextFactory() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

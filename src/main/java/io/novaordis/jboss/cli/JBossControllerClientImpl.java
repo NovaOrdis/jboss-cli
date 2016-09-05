@@ -19,13 +19,11 @@ package io.novaordis.jboss.cli;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
 import org.jboss.as.cli.CommandContext;
 import org.jboss.as.cli.CommandContextFactory;
-import org.jboss.as.cli.Util;
 import org.jboss.as.cli.operation.impl.DefaultCallbackHandler;
 import org.jboss.as.cli.parsing.ParserUtil;
 import org.jboss.as.cli.parsing.operation.OperationFormat;
 import org.jboss.as.controller.client.ModelControllerClient;
 import org.jboss.dmr.ModelNode;
-import org.jboss.dmr.ModelType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +46,7 @@ public class JBossControllerClientImpl implements JBossControllerClient {
     private boolean initializeConsole;
     private int connectionTimeout;
 
+    private CommandContextFactory factory;
     private CommandContext commandContext;
 
     private boolean connected;
@@ -98,6 +97,12 @@ public class JBossControllerClientImpl implements JBossControllerClient {
     }
 
     @Override
+    public void setCommandContextFactory(CommandContextFactory factory) {
+
+        this.factory = factory;
+    }
+
+    @Override
     public void connect() throws JBossCliException {
 
         if (connected) {
@@ -107,7 +112,10 @@ public class JBossControllerClientImpl implements JBossControllerClient {
 
         try {
 
-            CommandContextFactory factory = CommandContextFactory.getInstance();
+            if (factory == null) {
+                factory = CommandContextFactory.getInstance();
+            }
+
             commandContext = factory.newCommandContext(
                     controllerAddress.getHost(),
                     controllerAddress.getPort(),
@@ -148,13 +156,16 @@ public class JBossControllerClientImpl implements JBossControllerClient {
         String command = path + ":read-attribute(name=" + attributeName + ")";
 
         boolean validate = true;
+
         //noinspection ConstantConditions
         DefaultCallbackHandler parsedCommand = new DefaultCallbackHandler(validate);
 
         try {
+
             ParserUtil.parse(command, parsedCommand);
         }
         catch(Exception e) {
+
             throw new JBossCliException(e);
         }
 
@@ -174,6 +185,7 @@ public class JBossControllerClientImpl implements JBossControllerClient {
             request = parsedCommand.toOperationRequest(commandContext);
         }
         catch (Exception e) {
+
             throw new JBossCliException(e);
         }
 
@@ -186,33 +198,11 @@ public class JBossControllerClientImpl implements JBossControllerClient {
             result = client.execute(request);
         }
         catch (Exception e) {
+
             throw new JBossCliException(e);
         }
 
-        if(Util.isSuccess(result)) {
-
-            ModelNode r = result.get(Util.RESULT);
-            ModelType type = r.getType();
-
-            if (ModelType.STRING.equals(type)) {
-
-                return r.asString();
-            }
-            else if (ModelType.INT.equals(type)) {
-
-                return r.asInt();
-            }
-            else {
-                throw new RuntimeException("NOT YET IMPLEMENTED: handling type " + type);
-            }
-
-        } else {
-
-            String failureDescription = Util.getFailureDescription(result);
-            System.out.println("failure: " + failureDescription);
-        }
-
-        return "?";
+        return ModelNodeUtil.operationResponseToValue(result);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

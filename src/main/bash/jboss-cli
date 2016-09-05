@@ -12,6 +12,7 @@ reldir=$(dirname $0)
 main_class=${main_class}
 verbose=false
 jboss_home=/Users/ovidiu/runtime/jboss-eap-6.4.6
+jboss_cli_jar=$(dirname $0)/../../../target/novaordis-jboss-cli-1.0.0-SNAPSHOT-18.jar
 
 function debug() {
     ${verbose} && echo "$@" 1>&2;
@@ -53,7 +54,7 @@ function get_classpath() {
 
     jboss_cli_classpath=$(get-jboss-cli-classpath ${jboss_home}) || exit 1
 
-    local classpath=$(dirname $0)/../../../target/novaordis-jboss-cli-1.0.0-SNAPSHOT-1.jar:${jboss_cli_classpath}
+    local classpath=${jboss_cli_jar}:${jboss_cli_classpath}
 
     #echo ">>>: ${classpath}" 1>&2;
     echo ${classpath}

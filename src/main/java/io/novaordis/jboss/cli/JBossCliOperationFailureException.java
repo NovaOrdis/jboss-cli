@@ -17,39 +17,31 @@
 package io.novaordis.jboss.cli;
 
 /**
- * A simple command line wrapper to test the library.
- *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 9/2/16
  */
-public class Main {
+public class JBossCliOperationFailureException extends JBossCliException {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
 
-    public static void main(String[] args) throws Exception {
-
-        JBossControllerClient c = new JBossControllerClientImpl();
-
-        c.connect();
-
-//        String path = "/subsystem=web/connector=http";
-//        String attributeName = "bytesReceived";
-
-        String path = "/subsystem=no-such-path";
-        String attributeName = "name";
-
-        Object o = c.getAttributeValue(path, attributeName);
-
-        System.out.println("value: " + o);
-
-        c.disconnect();
-    }
-
     // Attributes ------------------------------------------------------------------------------------------------------
 
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public JBossCliOperationFailureException(String message) {
+        super(message);
+    }
+
+    public JBossCliOperationFailureException(Throwable cause) {
+        super(cause);
+    }
+
+    public JBossCliOperationFailureException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
 
     // Public ----------------------------------------------------------------------------------------------------------
 

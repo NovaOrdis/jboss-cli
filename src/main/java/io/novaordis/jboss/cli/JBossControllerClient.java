@@ -17,6 +17,7 @@
 package io.novaordis.jboss.cli;
 
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
+import org.jboss.as.cli.CommandContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -130,12 +131,17 @@ public interface JBossControllerClient {
     /**
      * Sends a command into the controller that returns the value of the specified attribute.
      *
-     * null will be returned if the attribute is not defined.
-     *
-     * The returned object instance could be a String, Integer, etc. depending on the type of the ModelNode returned
-     * by the controller.
+     * If the path is valid but the attribute does not exist, or is undefined, them method will return null. If the
+     * attribute exists, and it is defined, the returned object instance could be a String, Integer, etc. depending on
+     * the type of the ModelNode returned by the controller. If the path does not exist, the method will throw an
+     * exception, see below.
      *
      * @throws JBossCliException if the path is invalid (does not exist on controller)
      */
     Object getAttributeValue(String path, String attributeName) throws JBossCliException;
+
+    /**
+     * Install a custom command context factory. If not installed, CommandContextFactory.getInstance() is used.
+     */
+    void setCommandContextFactory(CommandContextFactory commandContextFactory);
 }

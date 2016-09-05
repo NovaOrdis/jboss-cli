@@ -223,6 +223,118 @@ public abstract class JBossControllerClientTest {
         assertEquals(a2, a);
     }
 
+    // getAttributeValue() ---------------------------------------------------------------------------------------------
+
+    @Test
+    public void getAttributeValue_String() throws Exception {
+
+        JBossControllerClient c = getJBossControllerClientToTest();
+
+        MockCommandContext mcc = new MockCommandContext();
+        MockCommandContextFactory mccf = new MockCommandContextFactory(mcc);
+        c.setCommandContextFactory(mccf);
+
+        //
+        // install path and attribute
+        //
+
+        mcc.install("/a=b", "c", "d");
+
+        c.connect();
+
+        Object o = c.getAttributeValue("/a=b", "c");
+
+        assertEquals("d", o);
+
+        c.disconnect();
+    }
+
+    @Test
+    public void getAttributeValue_Int() throws Exception {
+
+        JBossControllerClient c = getJBossControllerClientToTest();
+
+        MockCommandContext mcc = new MockCommandContext();
+        MockCommandContextFactory mccf = new MockCommandContextFactory(mcc);
+        c.setCommandContextFactory(mccf);
+
+        //
+        // install path and attribute
+        //
+
+        mcc.install("/a=b", "c", 1);
+
+        c.connect();
+
+        Object o = c.getAttributeValue("/a=b", "c");
+
+        assertEquals(1, o);
+
+        c.disconnect();
+    }
+
+    @Test
+    public void getAttributeValue_ValidPath_NoSuchAttribute() throws Exception {
+
+        //
+        // must return null
+        //
+
+        JBossControllerClient c = getJBossControllerClientToTest();
+
+        MockCommandContext mcc = new MockCommandContext();
+        MockCommandContextFactory mccf = new MockCommandContextFactory(mcc);
+        c.setCommandContextFactory(mccf);
+
+        //
+        // install path and a different attribute
+        //
+
+        mcc.install("/a=b", "x", "y");
+
+        c.connect();
+
+        Object o = c.getAttributeValue("/a=b", "c");
+
+        assertNull(o);
+
+        c.disconnect();
+    }
+
+    @Test
+    public void getAttributeValue_NoSuchPath() throws Exception {
+
+        //
+        // must throw exception
+        //
+
+        JBossControllerClient c = getJBossControllerClientToTest();
+
+        MockCommandContext mcc = new MockCommandContext();
+        MockCommandContextFactory mccf = new MockCommandContextFactory(mcc);
+        c.setCommandContextFactory(mccf);
+
+        //
+        // install a different path and a different attribute
+        //
+
+        mcc.install("/a=d", "x", "y");
+
+        c.connect();
+
+        try {
+            c.getAttributeValue("/a=b", "c");
+            fail("should throw exception");
+        }
+        catch(JBossCliException e) {
+            String s = e.getMessage();
+            log.info(s);
+            assertEquals("", s);
+        }
+
+        c.disconnect();
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
