@@ -8,7 +8,7 @@
     <artifactId>novaordis-jboss-cli</artifactId>
     <packaging>jar</packaging>
 
-    <version>1.0.0-SNAPSHOT-23</version>
+    <version>1.0.0-SNAPSHOT-24</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
