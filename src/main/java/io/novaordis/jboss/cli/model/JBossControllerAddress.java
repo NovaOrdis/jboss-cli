@@ -257,7 +257,8 @@ public class JBossControllerAddress {
     }
 
     /**
-     * @return the canonical string representation of the entire address.
+     * @return the canonical string representation of the entire address. The canonical representation does not display
+     * the password, even if it was specified.
      */
     public String getLiteral() {
 
