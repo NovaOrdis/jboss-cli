@@ -256,6 +256,28 @@ public class JBossControllerAddress {
         return password;
     }
 
+    /**
+     * @return the canonical string representation of the entire address.
+     */
+    public String getLiteral() {
+
+        String s = "";
+
+        if (username != null) {
+
+            s += username + "@";
+        }
+
+        s += hostLiteral;
+
+        if (portLiteral != null) {
+
+            s += ":" + portLiteral;
+        }
+
+        return s;
+    }
+
     @Override
     public boolean equals(Object o) {
 

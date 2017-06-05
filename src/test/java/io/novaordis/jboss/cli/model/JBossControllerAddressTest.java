@@ -620,6 +620,32 @@ public class JBossControllerAddressTest {
         assertEquals(JBossControllerClient.DEFAULT_PORT, a.getPort());
     }
 
+    // getLiteral() ----------------------------------------------------------------------------------------------------
+
+    @Test
+    public void getLiteral() throws Exception {
+
+        String s = "admin:adminpasswd@1.2.3.4:9999";
+        JBossControllerAddress a = JBossControllerAddress.parseAddress(s);
+        assertEquals("admin@1.2.3.4:9999", a.getLiteral());
+    }
+
+    @Test
+    public void getLiteral2() throws Exception {
+
+        String s = "1.2.3.4";
+        JBossControllerAddress a = JBossControllerAddress.parseAddress(s);
+        assertEquals(s, a.getLiteral());
+    }
+
+    @Test
+    public void getLiteral3() throws Exception {
+
+        String s = "1.2.3.4:5555";
+        JBossControllerAddress a = JBossControllerAddress.parseAddress(s);
+        assertEquals(s, a.getLiteral());
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
