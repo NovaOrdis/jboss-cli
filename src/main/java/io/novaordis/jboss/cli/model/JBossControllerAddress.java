@@ -31,14 +31,36 @@ public class JBossControllerAddress {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
+    public static final String PROTOCOL = "jbosscli";
+    public static final String PROTOCOL_SEPARATOR = "://";
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     /**
-     * Parses the following format [[username:password]@]host[:port].
+     * Parses the following format [jbosscli://][[username:password]@]host[:port].
      */
     public static JBossControllerAddress parseAddress(String s) throws JBossCliException {
 
-        int i = s.indexOf('@');
+        if (s == null) {
+
+            throw new IllegalArgumentException("null address");
+        }
+
+        int i = s.indexOf(PROTOCOL_SEPARATOR);
+
+        if (i != -1) {
+
+            String protocol = s.substring(0, i);
+
+            if (!PROTOCOL.equals(protocol)) {
+
+                throw new JBossCliException("not a JBoss controller address: " + s);
+            }
+
+            s = s.substring(i + PROTOCOL_SEPARATOR.length());
+        }
+
+        i = s.indexOf('@');
 
         String username = null;
         char[] password = null;
@@ -257,8 +279,9 @@ public class JBossControllerAddress {
     }
 
     /**
-     * @return the canonical string representation of the entire address. The canonical representation does not display
-     * the password, even if it was specified.
+     * @return the canonical string representation of the entire address [username@]<host>[:port]. The canonical
+     *          representation does not display the password, even if it was specified, and it also does not include
+     *          a protocol prefix.
      */
     public String getLiteral() {
 

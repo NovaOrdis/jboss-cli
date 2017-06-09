@@ -576,6 +576,35 @@ public class JBossControllerAddressTest {
         assertEquals("1000", a.getPortLiteral());
     }
 
+    @Test
+    public void parseAddress_ProtocolPrefix() throws Exception {
+
+        JBossControllerAddress a = JBossControllerAddress.parseAddress("jbosscli://1.2.3.4");
+
+        assertEquals("1.2.3.4", a.getHost());
+        assertEquals(9999, a.getPort());
+        assertNull(a.getUsername());
+        assertNull(a.getPassword());
+        assertEquals("1.2.3.4", a.getLiteral());
+    }
+
+    @Test
+    public void parseAddress_InvalidProtocolPrefix() throws Exception {
+
+        String s = "jmx://1.2.3.4";
+
+        try {
+
+            JBossControllerAddress.parseAddress(s);
+            fail("should have thrown exception");
+        }
+        catch(JBossCliException e) {
+
+            String msg = e.getMessage();
+            assertEquals("not a JBoss controller address: " + s, msg);
+        }
+    }
+
     // getHostLiteral() ------------------------------------------------------------------------------------------------
 
     @Test
