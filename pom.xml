@@ -8,17 +8,29 @@
     <artifactId>novaordis-jboss-cli</artifactId>
     <packaging>jar</packaging>
 
-    <version>1.0.2-SNAPSHOT-1</version>
+    <version>1.0.2</version>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.build.timestamp.format>MM/dd/yy</maven.build.timestamp.format>
-        <release_date>${maven.build.timestamp}</release_date>
+
+        <!---
+               Dependency Versions
+        -->
+
+        <novaordis.utilities.version>4.7.4</novaordis.utilities.version>
         <slf4j.version>1.7.12</slf4j.version>
         <junit.version>4.12</junit.version>
 
         <jboss.dmr.version>1.2.2.Final-redhat-1</jboss.dmr.version>
         <jboss.as.cli.version>7.5.6.Final-redhat-2</jboss.as.cli.version>
+
+
+        <!---
+               End of Dependency Versions
+        -->
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.build.timestamp.format>MM/dd/yy</maven.build.timestamp.format>
+        <release_date>${maven.build.timestamp}</release_date>
 
     </properties>
 
@@ -69,6 +81,11 @@
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>io.novaordis.utilities</groupId>
+            <artifactId>novaordis-utilities</artifactId>
+            <version>${novaordis.utilities.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>

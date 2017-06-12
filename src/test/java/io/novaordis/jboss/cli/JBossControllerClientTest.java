@@ -57,8 +57,7 @@ public abstract class JBossControllerClientTest {
         assertNull(c.getUsername());
         assertNull(c.getPassword());
 
-        JBossControllerAddress a = new JBossControllerAddress(
-                "somebody", new char[] { 'a', 'b', 'c', 'd'}, "something", "something", 1234, "1234");
+        JBossControllerAddress a = new JBossControllerAddress("jbosscli://somebody:abcd@something:1234");
         c.setControllerAddress(a);
 
         assertEquals("something", c.getHost());
@@ -96,8 +95,7 @@ public abstract class JBossControllerClientTest {
     @Test
     public void getInstance_DefaultBehavior() throws Exception {
 
-        JBossControllerAddress address = new JBossControllerAddress(
-                "test-user", new char[] { 't', 'e', 's', 't'}, "test-host", "test-host", 7777, "7777");
+        JBossControllerAddress address = new JBossControllerAddress("jbosscli://test-user:test@test-host:7777");
 
         JBossControllerClient c = JBossControllerClient.getInstance(address);
 
@@ -113,9 +111,7 @@ public abstract class JBossControllerClientTest {
         assertEquals('s', password[2]);
         assertEquals('t', password[3]);
         assertEquals("test-host", address2.getHost());
-        assertEquals("test-host", address2.getHostLiteral());
-        assertEquals(7777, address2.getPort());
-        assertEquals("7777", address2.getPortLiteral());
+        assertEquals(7777, address2.getPort().intValue());
     }
 
     @Test
@@ -127,8 +123,7 @@ public abstract class JBossControllerClientTest {
 
         try {
 
-            JBossControllerAddress address = new JBossControllerAddress(
-                    "test-user-2", new char[] { 't', 'e', 's', 't'}, "test-host-2", "test-host-2", 8888, "8888");
+            JBossControllerAddress address = new JBossControllerAddress("jbosscli://test-user-2:test@test-host-2:8888");
 
 
             JBossControllerClient c = JBossControllerClient.getInstance(address);
@@ -145,9 +140,7 @@ public abstract class JBossControllerClientTest {
             assertEquals('s', password[2]);
             assertEquals('t', password[3]);
             assertEquals("test-host-2", address2.getHost());
-            assertEquals("test-host-2", address2.getHostLiteral());
-            assertEquals(8888, address2.getPort());
-            assertEquals("8888", address2.getPortLiteral());
+            assertEquals(8888, address2.getPort().intValue());
         }
         finally {
 
@@ -164,8 +157,7 @@ public abstract class JBossControllerClientTest {
 
         try {
 
-            JBossControllerAddress address = new JBossControllerAddress(
-                    "test-user-2", new char[] { 't', 'e', 's', 't'}, "test-host-2", "test-host-2", 8888, "8888");
+            JBossControllerAddress address = new JBossControllerAddress("jbosscli://test-user-2:test@test-host-2:8888");
 
             JBossControllerClient.getInstance(address);
             fail("should have thrown exception");
@@ -206,8 +198,7 @@ public abstract class JBossControllerClientTest {
 
         JBossControllerClient c = getJBossControllerClientToTest();
 
-        JBossControllerAddress a = new JBossControllerAddress(
-                "some-user", new char[] { 'a'}, "some-host", "some-host", 2, "2");
+        JBossControllerAddress a = new JBossControllerAddress("jbosscli://some-user:a@some-host:2");
 
         c.setControllerAddress(a);
 
