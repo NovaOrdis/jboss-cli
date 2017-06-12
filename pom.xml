@@ -8,7 +8,7 @@
     <artifactId>novaordis-jboss-cli</artifactId>
     <packaging>jar</packaging>
 
-    <version>1.0.2</version>
+    <version>1.0.3-SNAPSHOT-1</version>
 
     <properties>
 
