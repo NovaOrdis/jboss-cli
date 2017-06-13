@@ -47,6 +47,10 @@ public class JBossControllerAddressTest {
 
         JBossControllerAddress a = new JBossControllerAddress();
 
+        //
+        // we rely on the fact that the no-argument constructor is NOT initialized
+        //
+
         assertNull(a.getProtocol());
         assertNull(a.getHost());
         assertNull(a.getUsername());
@@ -68,6 +72,7 @@ public class JBossControllerAddressTest {
                 "jbosscli://" + JBossControllerClient.DEFAULT_HOST + ":" + JBossControllerClient.DEFAULT_PORT);
 
         assertEquals(JBossControllerClient.DEFAULT_HOST, a.getHost());
+        assertEquals(JBossControllerClient.DEFAULT_PORT, a.getPort().intValue());
     }
 
     @Test
@@ -101,6 +106,13 @@ public class JBossControllerAddressTest {
         JBossControllerAddress a = new JBossControllerAddress(
                 "jbosscli://" + JBossControllerClient.DEFAULT_HOST + ":" + JBossControllerClient.DEFAULT_PORT);
 
+        assertEquals(JBossControllerClient.DEFAULT_PORT, a.getPort().intValue());
+    }
+
+    @Test
+    public void port_DefaultPort2() throws Exception {
+
+        JBossControllerAddress a = new JBossControllerAddress("jbosscli://somehost");
         assertEquals(JBossControllerClient.DEFAULT_PORT, a.getPort().intValue());
     }
 
@@ -397,7 +409,7 @@ public class JBossControllerAddressTest {
         JBossControllerAddress a = new JBossControllerAddress("jbosscli://1.2.3.4");
 
         assertEquals("1.2.3.4", a.getHost());
-        assertNull(a.getPort());
+        assertEquals(JBossControllerAddress.DEFAULT_PORT, a.getPort().intValue());
         assertNull(a.getUsername());
         assertNull(a.getPassword());
         assertEquals("1.2.3.4", a.getLiteral());
