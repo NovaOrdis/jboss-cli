@@ -86,8 +86,9 @@ public class JBossControllerAddressTest {
         catch(AddressException e) {
 
             String msg = e.getMessage();
-            assertTrue(msg.contains("empty"));
+            assertTrue(msg.contains("invalid"));
             assertTrue(msg.contains("host"));
+            assertTrue(msg.contains("specification"));
         }
     }
 
@@ -224,8 +225,9 @@ public class JBossControllerAddressTest {
         catch(AddressException e) {
 
             String msg = e.getMessage();
-            assertTrue(msg.contains("empty"));
+            assertTrue(msg.contains("invalid"));
             assertTrue(msg.contains("host"));
+            assertTrue(msg.contains("specification"));
         }
     }
 
@@ -259,13 +261,30 @@ public class JBossControllerAddressTest {
         }
     }
 
+    @Test
+    public void constructor_DefaultHost() throws Exception {
+
+        JBossControllerAddress c = new JBossControllerAddress("jbosscli://");
+        assertEquals(JBossControllerAddress.DEFAULT_HOST, c.getHost());
+        assertEquals(JBossControllerAddress.DEFAULT_PORT, c.getPort().intValue());
+    }
+
+    @Test
+    public void constructor_DefaultHost2() throws Exception {
+
+        JBossControllerAddress c = new JBossControllerAddress("");
+        assertEquals(JBossControllerAddress.DEFAULT_HOST, c.getHost());
+        assertEquals(JBossControllerAddress.DEFAULT_PORT, c.getPort().intValue());
+    }
+
+
     // equals() --------------------------------------------------------------------------------------------------------
 
     @Test
     public void equals_Default() throws Exception {
 
         JBossControllerAddress a = new JBossControllerAddress("admin", "password1", "mock-host", 12345);
-        JBossControllerAddress a2 = new JBossControllerAddress("admin", "password2", "mock-host", 12345);;
+        JBossControllerAddress a2 = new JBossControllerAddress("admin", "password2", "mock-host", 12345);
 
         assertEquals(a, a2);
         assertEquals(a2, a);

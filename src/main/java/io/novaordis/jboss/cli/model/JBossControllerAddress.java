@@ -82,6 +82,11 @@ public class JBossControllerAddress extends AddressImpl {
             throw new AddressException("invalid JBoss CLI protocol \"" + protocol + "\"");
         }
 
+        if (getHost() == null) {
+
+            setHost(DEFAULT_HOST);
+        }
+
         if (getPort() == null) {
 
             setPort(DEFAULT_PORT);
