@@ -16,7 +16,6 @@
 
 package io.novaordis.jboss.cli.model;
 
-import io.novaordis.jboss.cli.JBossControllerClient;
 import io.novaordis.utilities.address.AddressException;
 import io.novaordis.utilities.address.AddressImpl;
 
@@ -36,18 +35,33 @@ public class JBossControllerAddress extends AddressImpl {
 
     public static final String PROTOCOL = "jbosscli";
 
+    public static final String DEFAULT_HOST = "localhost";
+
+    public static final int DEFAULT_PORT = 9999;
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+//    /**
+//     * Defaults
+//     */
+//    public JBossControllerAddress() throws AddressException {
+//
+//        this("jbosscli://" + JBossControllerClient.DEFAULT_HOST + ":" + JBossControllerClient.DEFAULT_PORT);
+//    }
+
     /**
      * Defaults
      */
-    public JBossControllerAddress() throws AddressException {
+    public JBossControllerAddress() {
+    }
 
-        this("jbosscli://" + JBossControllerClient.DEFAULT_HOST + ":" + JBossControllerClient.DEFAULT_PORT);
+    public JBossControllerAddress(String username, String password, String host, Integer port) {
+
+        super(PROTOCOL, username, password, host, port);
     }
 
     /**
@@ -72,22 +86,9 @@ public class JBossControllerAddress extends AddressImpl {
     // AddressImpl overrides -------------------------------------------------------------------------------------------
 
     @Override
-    public Integer getPort() {
+    public JBossControllerAddress copy() {
 
-        //
-        // address default differently
-        //
-
-        Integer p = super.getPort();
-
-        if (p == null) {
-
-            return JBossControllerClient.DEFAULT_PORT;
-        }
-        else {
-
-            return p;
-        }
+        return (JBossControllerAddress)super.copy();
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -95,6 +96,12 @@ public class JBossControllerAddress extends AddressImpl {
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected JBossControllerAddress createBlankInstance() {
+
+        return new JBossControllerAddress();
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

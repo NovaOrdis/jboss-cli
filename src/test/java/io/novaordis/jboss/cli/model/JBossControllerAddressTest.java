@@ -47,10 +47,11 @@ public class JBossControllerAddressTest {
 
         JBossControllerAddress a = new JBossControllerAddress();
 
-        assertEquals(JBossControllerClient.DEFAULT_HOST, a.getHost());
-        assertEquals(JBossControllerClient.DEFAULT_PORT, a.getPort().intValue());
+        assertNull(a.getProtocol());
+        assertNull(a.getHost());
         assertNull(a.getUsername());
         assertNull(a.getPassword());
+        assertNull(a.getPort());
     }
 
     @Test
@@ -251,8 +252,8 @@ public class JBossControllerAddressTest {
     @Test
     public void equals_Default() throws Exception {
 
-        JBossControllerAddress a = new JBossControllerAddress();
-        JBossControllerAddress a2 = new JBossControllerAddress();
+        JBossControllerAddress a = new JBossControllerAddress("admin", "password1", "mock-host", 12345);
+        JBossControllerAddress a2 = new JBossControllerAddress("admin", "password2", "mock-host", 12345);;
 
         assertEquals(a, a2);
         assertEquals(a2, a);
@@ -396,7 +397,7 @@ public class JBossControllerAddressTest {
         JBossControllerAddress a = new JBossControllerAddress("jbosscli://1.2.3.4");
 
         assertEquals("1.2.3.4", a.getHost());
-        assertEquals(9999, a.getPort().intValue());
+        assertNull(a.getPort());
         assertNull(a.getUsername());
         assertNull(a.getPassword());
         assertEquals("1.2.3.4", a.getLiteral());
@@ -443,6 +444,25 @@ public class JBossControllerAddressTest {
         String s = "1.2.3.4:5555";
         JBossControllerAddress a = new JBossControllerAddress(s);
         assertEquals(s, a.getLiteral());
+    }
+
+    // copy() ----------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void copy_Mutate() throws Exception {
+
+        JBossControllerAddress a = new JBossControllerAddress();
+
+        a.setPort(56789);
+
+        JBossControllerAddress copy = a.copy();
+
+        assertEquals(56789, copy.getPort().intValue());
+
+        copy.setPort(56790);
+
+        assertEquals(56789, a.getPort().intValue());
+        assertEquals(56790, copy.getPort().intValue());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

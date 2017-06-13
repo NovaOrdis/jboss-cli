@@ -17,7 +17,6 @@
 package io.novaordis.jboss.cli;
 
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
-import io.novaordis.utilities.address.AddressException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,15 +79,10 @@ public interface JBossControllerClient {
 
         if (address == null) {
 
-            try {
+            address = new JBossControllerAddress(
+                    null, null, JBossControllerAddress.DEFAULT_HOST, JBossControllerAddress.DEFAULT_PORT);
 
-                address = new JBossControllerAddress();
-                log.debug("using default address " + address);
-            }
-            catch(AddressException e) {
-
-                throw new IllegalStateException(e);
-            }
+            log.debug("using default address " + address);
         }
 
         client.setControllerAddress(address);
