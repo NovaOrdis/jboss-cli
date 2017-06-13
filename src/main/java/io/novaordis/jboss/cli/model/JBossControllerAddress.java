@@ -45,18 +45,12 @@ public class JBossControllerAddress extends AddressImpl {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-//    /**
-//     * Defaults
-//     */
-//    public JBossControllerAddress() throws AddressException {
-//
-//        this("jbosscli://" + JBossControllerClient.DEFAULT_HOST + ":" + JBossControllerClient.DEFAULT_PORT);
-//    }
-
     /**
-     * Defaults
+     * Defaults, implies jbosscli://localhost:9999
      */
     public JBossControllerAddress() {
+
+        super(PROTOCOL, null, null, DEFAULT_HOST, DEFAULT_PORT);
     }
 
     public JBossControllerAddress(String username, String password, String host, Integer port) {
@@ -110,7 +104,7 @@ public class JBossControllerAddress extends AddressImpl {
     @Override
     protected JBossControllerAddress createBlankInstance() {
 
-        return new JBossControllerAddress();
+        return new JBossControllerAddress(null, null, null, null);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

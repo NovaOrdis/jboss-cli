@@ -52,8 +52,8 @@ public abstract class JBossControllerClientTest {
 
         JBossControllerClient c = getJBossControllerClientToTest();
 
-        assertEquals(JBossControllerClient.DEFAULT_HOST, c.getHost());
-        assertEquals(JBossControllerClient.DEFAULT_PORT, c.getPort());
+        assertEquals(JBossControllerAddress.DEFAULT_HOST, c.getHost());
+        assertEquals(JBossControllerAddress.DEFAULT_PORT, c.getPort());
         assertNull(c.getUsername());
         assertNull(c.getPassword());
 

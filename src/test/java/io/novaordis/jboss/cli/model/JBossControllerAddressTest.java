@@ -16,7 +16,6 @@
 
 package io.novaordis.jboss.cli.model;
 
-import io.novaordis.jboss.cli.JBossControllerClient;
 import io.novaordis.utilities.address.AddressException;
 import org.junit.Test;
 
@@ -47,15 +46,11 @@ public class JBossControllerAddressTest {
 
         JBossControllerAddress a = new JBossControllerAddress();
 
-        //
-        // we rely on the fact that the no-argument constructor is NOT initialized
-        //
-
-        assertNull(a.getProtocol());
-        assertNull(a.getHost());
+        assertEquals(JBossControllerAddress.PROTOCOL, a.getProtocol());
+        assertEquals(JBossControllerAddress.DEFAULT_HOST, a.getHost());
         assertNull(a.getUsername());
         assertNull(a.getPassword());
-        assertNull(a.getPort());
+        assertEquals(JBossControllerAddress.DEFAULT_PORT, a.getPort().intValue());
     }
 
     @Test
@@ -69,10 +64,10 @@ public class JBossControllerAddressTest {
     public void host_Default() throws Exception {
 
         JBossControllerAddress a = new JBossControllerAddress(
-                "jbosscli://" + JBossControllerClient.DEFAULT_HOST + ":" + JBossControllerClient.DEFAULT_PORT);
+                "jbosscli://" + JBossControllerAddress.DEFAULT_HOST + ":" + JBossControllerAddress.DEFAULT_PORT);
 
-        assertEquals(JBossControllerClient.DEFAULT_HOST, a.getHost());
-        assertEquals(JBossControllerClient.DEFAULT_PORT, a.getPort().intValue());
+        assertEquals(JBossControllerAddress.DEFAULT_HOST, a.getHost());
+        assertEquals(JBossControllerAddress.DEFAULT_PORT, a.getPort().intValue());
     }
 
     @Test
@@ -80,7 +75,7 @@ public class JBossControllerAddressTest {
 
         try {
 
-            new JBossControllerAddress("jbosscli://:" + JBossControllerClient.DEFAULT_PORT);
+            new JBossControllerAddress("jbosscli://:" + JBossControllerAddress.DEFAULT_PORT);
             fail("should have thrown Exception");
         }
         catch(AddressException e) {
@@ -96,7 +91,7 @@ public class JBossControllerAddressTest {
     public void port() throws Exception {
 
         JBossControllerAddress a =
-                new JBossControllerAddress("jbosscli://" + JBossControllerClient.DEFAULT_HOST + ":1111");
+                new JBossControllerAddress("jbosscli://" + JBossControllerAddress.DEFAULT_HOST + ":1111");
 
         assertEquals(1111, a.getPort().intValue());
     }
@@ -105,23 +100,23 @@ public class JBossControllerAddressTest {
     public void port_DefaultPort() throws Exception {
 
         JBossControllerAddress a = new JBossControllerAddress(
-                "jbosscli://" + JBossControllerClient.DEFAULT_HOST + ":" + JBossControllerClient.DEFAULT_PORT);
+                "jbosscli://" + JBossControllerAddress.DEFAULT_HOST + ":" + JBossControllerAddress.DEFAULT_PORT);
 
-        assertEquals(JBossControllerClient.DEFAULT_PORT, a.getPort().intValue());
+        assertEquals(JBossControllerAddress.DEFAULT_PORT, a.getPort().intValue());
     }
 
     @Test
     public void port_DefaultPort2() throws Exception {
 
         JBossControllerAddress a = new JBossControllerAddress("jbosscli://somehost");
-        assertEquals(JBossControllerClient.DEFAULT_PORT, a.getPort().intValue());
+        assertEquals(JBossControllerAddress.DEFAULT_PORT, a.getPort().intValue());
     }
 
     @Test
     public void attemptToSetInvalidPortValue1() throws Exception {
 
         try {
-            new JBossControllerAddress("jbosscli://" + JBossControllerClient.DEFAULT_HOST + ":-1");
+            new JBossControllerAddress("jbosscli://" + JBossControllerAddress.DEFAULT_HOST + ":-1");
             fail("should have thrown Exception");
         }
         catch(AddressException e) {
@@ -136,7 +131,7 @@ public class JBossControllerAddressTest {
 
         try {
 
-            new JBossControllerAddress("jbosscli://" + JBossControllerClient.DEFAULT_HOST + ":0");
+            new JBossControllerAddress("jbosscli://" + JBossControllerAddress.DEFAULT_HOST + ":0");
             fail("should have thrown Exception");
         }
         catch(AddressException e) {
@@ -151,7 +146,7 @@ public class JBossControllerAddressTest {
 
         try {
 
-            new JBossControllerAddress("jbosscli://" + JBossControllerClient.DEFAULT_HOST + ":65536");
+            new JBossControllerAddress("jbosscli://" + JBossControllerAddress.DEFAULT_HOST + ":65536");
             fail("should have thrown Exception");
         }
         catch(AddressException e) {
@@ -165,8 +160,8 @@ public class JBossControllerAddressTest {
     public void setUsernameAndPassword() throws Exception {
 
         JBossControllerAddress a = new JBossControllerAddress(
-                "jbosscli://somebody:abc@" + JBossControllerClient.DEFAULT_HOST + ":" +
-                        JBossControllerClient.DEFAULT_PORT);
+                "jbosscli://somebody:abc@" + JBossControllerAddress.DEFAULT_HOST + ":" +
+                        JBossControllerAddress.DEFAULT_PORT);
 
         assertEquals("somebody", a.getUsername());
 
@@ -181,11 +176,11 @@ public class JBossControllerAddressTest {
     public void constructor() throws Exception {
 
         JBossControllerAddress a = new JBossControllerAddress(
-                "jbosscli://something:"  + JBossControllerClient.DEFAULT_PORT);
+                "jbosscli://something:"  + JBossControllerAddress.DEFAULT_PORT);
 
         assertEquals("something", a.getHost());
-        assertEquals(JBossControllerClient.DEFAULT_PORT, a.getPort().intValue());
-        assertEquals("something:" + JBossControllerClient.DEFAULT_PORT, a.toString());
+        assertEquals(JBossControllerAddress.DEFAULT_PORT, a.getPort().intValue());
+        assertEquals("something:" + JBossControllerAddress.DEFAULT_PORT, a.toString());
     }
 
     @Test

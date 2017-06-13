@@ -36,9 +36,6 @@ public interface JBossControllerClient {
 
     String JBOSS_CONTROLLER_CLIENT_IMPLEMENTATION_SYSTEM_PROPERTY_NAME = "io.novaordis.jboss.controller.client.impl";
 
-    String DEFAULT_HOST = "localhost";
-    int DEFAULT_PORT = 9999;
-
     // Static ----------------------------------------------------------------------------------------------------------
 
     /**
