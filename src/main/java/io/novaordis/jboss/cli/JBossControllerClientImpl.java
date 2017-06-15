@@ -55,15 +55,12 @@ public class JBossControllerClientImpl implements JBossControllerClient {
 
     public JBossControllerClientImpl() {
 
-        try {
+        this(new JBossControllerAddress());
+    }
 
-            this.controllerAddress = new JBossControllerAddress(
-                    "jbosscli://" + JBossControllerAddress.DEFAULT_HOST + ":" + JBossControllerAddress.DEFAULT_PORT);
-        }
-        catch(Exception e) {
+    public JBossControllerClientImpl(JBossControllerAddress address) {
 
-            throw new IllegalStateException(e);
-        }
+        this.controllerAddress = address;
         this.disableLocalAuthentication = false;
         this.initializeConsole = false;
         this.connectionTimeout = -1;
