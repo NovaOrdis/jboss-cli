@@ -180,7 +180,7 @@ public class JBossControllerAddressTest {
 
         assertEquals("something", a.getHost());
         assertEquals(JBossControllerAddress.DEFAULT_PORT, a.getPort().intValue());
-        assertEquals("something:" + JBossControllerAddress.DEFAULT_PORT, a.toString());
+        assertEquals("jbosscli://something:" + JBossControllerAddress.DEFAULT_PORT, a.toString());
     }
 
     @Test
@@ -190,7 +190,7 @@ public class JBossControllerAddressTest {
 
         assertEquals("something", a.getHost());
         assertEquals(1, a.getPort().intValue());
-        assertEquals("something:1", a.toString());
+        assertEquals("jbosscli://something:1", a.toString());
     }
 
     @Test
@@ -206,7 +206,7 @@ public class JBossControllerAddressTest {
         assertEquals('a', password2[0]);
         assertEquals('b', password2[1]);
         assertEquals('c', password2[2]);
-        assertEquals("someuser:***@something:1", a.toString());
+        assertEquals("jbosscli://someuser:***@something:1", a.toString());
     }
 
     @Test
@@ -374,7 +374,7 @@ public class JBossControllerAddressTest {
         assertEquals(5, a.getPort().intValue());
         assertNull(a.getUsername());
         assertNull(a.getPassword());
-        assertEquals("something:5", a.toString());
+        assertEquals("jbosscli://something:5", a.toString());
     }
 
     @Test
@@ -414,7 +414,7 @@ public class JBossControllerAddressTest {
         assertEquals('a', password[0]);
         assertEquals('b', password[1]);
         assertEquals('c', password[2]);
-        assertEquals("some-user:***@some-host:1000", a.toString());
+        assertEquals("jbosscli://some-user:***@some-host:1000", a.toString());
     }
 
     @Test

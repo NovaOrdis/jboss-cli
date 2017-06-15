@@ -8,7 +8,7 @@
     <artifactId>novaordis-jboss-cli</artifactId>
     <packaging>jar</packaging>
 
-    <version>1.0.3-SNAPSHOT-5</version>
+    <version>1.0.3-SNAPSHOT-6</version>
 
     <properties>
 
@@ -16,13 +16,12 @@
                Dependency Versions
         -->
 
-        <novaordis.utilities.version>4.7.5-SNAPSHOT-10</novaordis.utilities.version>
-        <slf4j.version>1.7.12</slf4j.version>
-        <junit.version>4.12</junit.version>
+        <novaordis.utilities.version>4.7.5-SNAPSHOT-14</novaordis.utilities.version>
 
         <jboss.dmr.version>1.2.2.Final-redhat-1</jboss.dmr.version>
         <jboss.as.cli.version>7.5.6.Final-redhat-2</jboss.as.cli.version>
-
+        <slf4j.version>1.7.12</slf4j.version>
+        <junit.version>4.12</junit.version>
 
         <!---
                End of Dependency Versions
