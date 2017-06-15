@@ -48,6 +48,8 @@ public interface JBossControllerClient {
      * @throws IllegalStateException if there is anything that prevents the factory method from producing an
      *                               instance.
      */
+    // TODO - merge with JBossControllerClientFactoryImpl.buildControllerClient()
+    @Deprecated
     static JBossControllerClient getInstance(JBossControllerAddress address) throws IllegalStateException {
 
         String className = System.getProperty(JBOSS_CONTROLLER_CLIENT_IMPLEMENTATION_SYSTEM_PROPERTY_NAME);
