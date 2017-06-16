@@ -242,18 +242,14 @@ public class JBossControllerAddressTest {
     }
 
     @Test
-    public void constructor_IfUsernamePresentPasswordCantBeNull() throws Exception {
+    public void constructor_IfUsernamePresentPasswordCanBeNull() throws Exception {
 
-        try {
-
-            new JBossControllerAddress("jbosscli://somebody@something:1");
-            fail("should have thrown Exception");
-        }
-        catch(AddressException e) {
-
-            String msg = e.getMessage();
-            assertTrue(msg.contains("missing password"));
-        }
+        JBossControllerAddress a = new JBossControllerAddress("jbosscli://somebody@something:1");
+        assertEquals("jbosscli", a.getProtocol());
+        assertEquals("something", a.getHost());
+        assertEquals(1, a.getPort().intValue());
+        assertEquals("somebody", a.getUsername());
+        assertNull(a.getPassword());
     }
 
     @Test
@@ -380,16 +376,14 @@ public class JBossControllerAddressTest {
     @Test
     public void parseAddress_Username_NoPassword() throws Exception {
 
-        try {
+        JBossControllerAddress a = new JBossControllerAddress("some-user@some-host:1000");
 
-            new JBossControllerAddress("some-user@some-host:1000");
-            fail("should have failed exception");
-        }
-        catch(AddressException e) {
-
-            String msg = e.getMessage();
-            assertTrue(msg.contains("missing password"));
-        }
+        assertEquals("jbosscli", a.getProtocol());
+        assertEquals("some-user", a.getUsername());
+        assertNull(a.getPassword());
+        assertEquals("some-host", a.getHost());
+        assertEquals(1000L, a.getPort().intValue());
+        assertEquals("some-user@some-host:1000", a.getLiteral());
     }
 
     @Test
