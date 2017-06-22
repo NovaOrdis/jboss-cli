@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <name>jboss-cli</name>
+    <name>novaordis-jboss</name>
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.novaordis.jboss.cli</groupId>
-    <artifactId>novaordis-jboss-cli</artifactId>
+    <groupId>io.novaordis.jboss</groupId>
+    <artifactId>novaordis-jboss</artifactId>
     <packaging>jar</packaging>
 
     <version>1.0.7-SNAPSHOT-1</version>
