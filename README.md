@@ -1,7 +1,8 @@
-# jboss-cli
-Adapter library for JBoss CLI
+# NovaOrdis JBoss (novaordis-jboss)
+
+JBoss support functionality (versioning, JBoss CLI, etc.).
 
 # Documentation
 
-https://kb.novaordis.com/index.php/jboss-cli
+https://kb.novaordis.com/index.php/novaordis-jboss
 
