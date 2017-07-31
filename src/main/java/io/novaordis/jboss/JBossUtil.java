@@ -19,6 +19,7 @@ package io.novaordis.jboss;
 import io.novaordis.utilities.Files;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  *
@@ -38,9 +39,9 @@ public class JBossUtil {
      *
      * @return a JBossInfo instance if the given path represents a valid JBoss client JAR, or null otherwise.
      *
-     *
+     * @exception IOException on any file-related problems, such as file not existing, etc.
      */
-    public static JBossInfo fromClientJar(String clientJarPath) {
+    public static JBossInfo fromClientJar(String clientJarPath) throws IOException {
 
         throw new RuntimeException("NOT YET IMPLEMENTED");
 
