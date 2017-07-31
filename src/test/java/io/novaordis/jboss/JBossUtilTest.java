@@ -131,7 +131,7 @@ public class JBossUtilTest {
         JBossInfo i = JBossUtil.fromClientJar(f.getPath());
         assertNotNull(i);
         assertTrue(i.isEAP());
-        assertEquals(6, i.getMajorVersion());
+        assertEquals(6, i.getMajorVersion().intValue());
     }
 
     @Test
@@ -145,7 +145,7 @@ public class JBossUtilTest {
         JBossInfo i = JBossUtil.fromClientJar(f.getPath());
         assertNotNull(i);
         assertTrue(i.isEAP());
-        assertEquals(6, i.getMajorVersion());
+        assertEquals(6, i.getMajorVersion().intValue());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

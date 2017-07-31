@@ -56,9 +56,9 @@ public class JBossInfo {
     }
 
     /**
-     * @return 3, 4, 5, 6, 7
+     * @return 3, 4, 5, 6, 7 or null if the major version could not be identified.
      */
-    public int getMajorVersion() {
+    public Integer getMajorVersion() {
 
         return majorVersion;
     }
