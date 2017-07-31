@@ -16,10 +16,16 @@
 
 package io.novaordis.jboss;
 
-import io.novaordis.utilities.Files;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
 
 /**
  *
@@ -32,6 +38,8 @@ public class JBossUtil {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
+    private static final Logger log = LoggerFactory.getLogger(JBossUtil.class);
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     /**
@@ -43,53 +51,129 @@ public class JBossUtil {
      */
     public static JBossInfo fromClientJar(String clientJarPath) throws IOException {
 
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        log.debug("extracting JBoss info from " + clientJarPath);
 
-//        File d = new File(classpathElement.substring(0, i));
-//
-//        if (!d.isDirectory()) {
-//
-//            log.warn("the directory in which " + jbossCliClientJarName + " was declared, does not exist: " + d);
-//            return;
-//        }
-//
-//        d = d.getParentFile();
-//
-//        if (!d.isDirectory()) {
-//
-//            log.warn("one of the parent directories of " + jbossCliClientJarName + ", does not exist: " + d);
-//            return;
-//        }
-//
-//        File jbossHome = d.getParentFile();
-//
-//        if (!jbossHome.isDirectory()) {
-//
-//            log.warn(jbossHome + " is not a valid JBoss home directory");
-//            return;
-//        }
-//
-//        File versionFile = new File(jbossHome, "version.txt");
-//
-//        if (!versionFile.isFile()) {
-//
-//            log.warn(versionFile + " does not exist");
-//        }
-//
-//        String versionString;
-//
-//        try {
-//
-//            versionString = Files.read(versionFile);
-//        }
-//        catch(Exception e) {
-//
-//            log.warn("failed to read JBoss version file " + versionFile, e);
-//            return;
-//        }
+        File f = new File(clientJarPath);
 
+        if (f.isDirectory()) {
 
+            throw new IOException("not a file: " + clientJarPath);
+        }
 
+        if (!f.isFile()) {
+
+            throw new IOException("no such file: " + clientJarPath);
+        }
+
+        JarFile jarFile = new JarFile(f);
+
+        //
+        // look for Manifest
+        //
+
+        ZipEntry e = jarFile.getEntry("META-INF/MANIFEST.MF");
+
+        if (e == null) {
+
+            //
+            // no manifest
+            //
+
+            throw new IOException("no META-INF/MANIFEST.MF found in " + f.getPath());
+        }
+
+        InputStream is = null;
+        BufferedReader br;
+
+        JBossInfo info = null;
+
+        try {
+
+            is = jarFile.getInputStream(e);
+            br = new BufferedReader(new InputStreamReader(is));
+
+            //
+            // look for "Implementation Title:"
+            //
+            // EAP 6
+            //  jboss-client.jar:
+            //      Implementation-Title: JBoss Application Server: EJB and JMS client [...]
+            //  jboss-cli.jar:
+            //      Implementation-Title: JBoss Application Server: Command line interface
+            //
+            // EAP 7
+            //  jboss-client.jar:
+            //      Implementation-Title: WildFly: EJB and JMS client [...]
+            //  jboss-cli.jar:
+            //      Implementation-Title: WildFly: Command line interface
+
+            String line;
+            boolean isClientJar = false;
+            boolean isCliJar = false;
+            Integer majorVersion = null;
+
+            while((line = br.readLine()) != null) {
+
+                if (line.startsWith("Implementation-Title:")) {
+
+                    line = line.substring("Implementation-Title:".length()).trim();
+
+                    if (line.startsWith("JBoss Application Server")) {
+
+                        majorVersion = 6;
+                    }
+                    else if (line.startsWith("WildFly")) {
+
+                        majorVersion = 7;
+                    }
+                    else {
+
+                        log.warn("we did not find \"JBoss Application Server\" or \"WildFly\" on the Implementation-Title line");
+                        break;
+                    }
+
+                    if (line.contains("Command line interface")) {
+
+                        isCliJar = true;
+
+                    }
+                    else if (line.contains("EJB and JMS client")) {
+
+                        isClientJar = true;
+                    }
+
+                    break;
+                }
+            }
+
+            if (isClientJar || isCliJar) {
+
+                info = new JBossInfo();
+
+                // TODO more heuristics required here, this is pretty thin
+
+                info.setMajorVersion(majorVersion);
+                info.setEAP(true);
+            }
+        }
+        finally {
+
+            if (is != null) {
+
+                try {
+
+                    is.close();
+                }
+                catch (IOException ioe) {
+
+                    log.warn("failed to close input stream");
+                }
+            }
+        }
+
+        log.debug(info == null ? "no JBoss info identified in " +  clientJarPath: info + " identified based on " + clientJarPath);
+
+        return info;
     }
 
     // Attributes ------------------------------------------------------------------------------------------------------

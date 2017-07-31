@@ -28,21 +28,99 @@ public class JBossInfo {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private boolean eap;
+
+    // null means that the major version could not be identified
+    private Integer majorVersion;
+
+    private String version;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public JBossInfo() {
+
+        // EAP by default
+        this.eap = true;
+    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
     public boolean isEAP() {
 
-        throw new RuntimeException("NYE");
+        return eap;
     }
 
     public String getVersion() {
 
-        throw new RuntimeException("NYE");
+        return version;
+    }
+
+    /**
+     * @return 3, 4, 5, 6, 7
+     */
+    public int getMajorVersion() {
+
+        return majorVersion;
+    }
+
+    @Override
+    public String toString() {
+
+        String s = "";
+
+        if (eap) {
+
+            s += "EAP ";
+        }
+        else {
+
+            s += "? ";
+        }
+
+        if (majorVersion != null) {
+
+            s += majorVersion + " ";
+        }
+        else {
+
+            s += "? ";
+        }
+
+        if (version != null) {
+
+            s += version;
+        }
+
+        return s;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
+
+    void setEAP(boolean b) {
+
+        this.eap = b;
+    }
+
+    void setVersion(String s) {
+
+        this.version = s;
+    }
+
+    void setMajorVersion(Integer i) {
+
+        if (i == null) {
+
+            majorVersion = null;
+            return;
+        }
+
+        if (i < 3 || i > 8) {
+
+            throw new IllegalArgumentException("invalid major version: " + i);
+        }
+
+        this.majorVersion = i;
+    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 
