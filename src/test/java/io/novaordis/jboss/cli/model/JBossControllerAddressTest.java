@@ -383,7 +383,7 @@ public class JBossControllerAddressTest {
         assertNull(a.getPassword());
         assertEquals("some-host", a.getHost());
         assertEquals(1000L, a.getPort().intValue());
-        assertEquals("some-user@some-host:1000", a.getLiteral());
+        assertEquals("jbosscli://some-user@some-host:1000", a.getLiteral());
     }
 
     @Test
@@ -420,7 +420,7 @@ public class JBossControllerAddressTest {
         assertEquals(JBossControllerAddress.DEFAULT_PORT, a.getPort().intValue());
         assertNull(a.getUsername());
         assertNull(a.getPassword());
-        assertEquals("1.2.3.4", a.getLiteral());
+        assertEquals("jbosscli://1.2.3.4", a.getLiteral());
     }
 
     @Test
@@ -447,7 +447,15 @@ public class JBossControllerAddressTest {
 
         String s = "admin:adminpasswd@1.2.3.4:9999";
         JBossControllerAddress a = new JBossControllerAddress(s);
-        assertEquals("admin@1.2.3.4:9999", a.getLiteral());
+        assertEquals("jbosscli://admin@1.2.3.4:9999", a.getLiteral());
+    }
+
+    @Test
+    public void getLiteral_TrailingSlash() throws Exception {
+
+        String s = "admin:adminpasswd@1.2.3.4:9999/";
+        JBossControllerAddress a = new JBossControllerAddress(s);
+        assertEquals("jbosscli://admin@1.2.3.4:9999", a.getLiteral());
     }
 
     @Test
@@ -455,7 +463,7 @@ public class JBossControllerAddressTest {
 
         String s = "1.2.3.4";
         JBossControllerAddress a = new JBossControllerAddress(s);
-        assertEquals(s, a.getLiteral());
+        assertEquals("jbosscli://" + s, a.getLiteral());
     }
 
     @Test
@@ -463,7 +471,7 @@ public class JBossControllerAddressTest {
 
         String s = "1.2.3.4:5555";
         JBossControllerAddress a = new JBossControllerAddress(s);
-        assertEquals(s, a.getLiteral());
+        assertEquals("jbosscli://" + s, a.getLiteral());
     }
 
     // copy() ----------------------------------------------------------------------------------------------------------
