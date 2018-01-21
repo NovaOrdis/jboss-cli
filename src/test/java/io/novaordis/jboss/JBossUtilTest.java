@@ -16,11 +16,11 @@
 
 package io.novaordis.jboss;
 
-import org.junit.Test;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.zip.ZipException;
+
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -96,8 +96,7 @@ public class JBossUtilTest {
 
             ZipException ze = (ZipException)e;
             String msg = ze.getMessage();
-            assertTrue(msg.contains("error"));
-            assertTrue(msg.contains("opening"));
+            assertNotNull(msg); // different error messages in Java 8 and Java 9
         }
     }
 
